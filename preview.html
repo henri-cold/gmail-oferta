@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/webp" href="/public/logozuda.webp">
+<style>
+  :root { color-scheme: light; padding: env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px); }
+  html, body { margin: 0; }
+  body { font-family: system-ui, sans-serif; font-size: 14px; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<meta charset="utf-8">
+<title>Manual de Mágicas Pro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+
+<style>
+  /* layout: stacked mobile-first, max 480px, soft green gradient page like the print */
+  /* single committed light-green brand theme */
+  :root {
+    --bg: #e9f5ea;
+    --bg-gradient: linear-gradient(175deg, #ffffff 0%, #e4f3e6 40%, #d6eeda 100%);
+    --surface: #ffffff;
+    --fg: #16212e;
+    --fg-muted: #5c6b72;
+    --blue: #2563eb;
+    --blue-light: #e5edff;
+    --green: #1aa64b;
+    --green-dark: #148a3e;
+    --green-light: #e4f8e9;
+    --gold: #f2a900;
+    --gold-light: #fff6dd;
+    --red: #e11d2e;
+    --red-light: #fdecec;
+    --border: #e4ebe5;
+    --footer-bg: linear-gradient(175deg, #d4efd6 0%, #a9ddad 100%);
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  [hidden] { display: none !important; }
+  body {
+    background:
+      radial-gradient(circle 440px at 50% 40px, rgba(37,99,235,0.45) 0%, rgba(37,99,235,0.18) 42%, rgba(37,99,235,0) 70%),
+      linear-gradient(175deg, #ffffff 0%, #e4f3e6 40%, #d6eeda 100%);
+    background-repeat: no-repeat, no-repeat;
+    background-position: top center, center;
+    background-attachment: scroll, fixed;
+    color: var(--fg);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0;
+  }
+
+  /* TOP BADGE - green pill centered */
+  .top-badge-wrap { text-align: center; padding: 20px max(16px, env(safe-area-inset-left, 0px)) 0; }
+  .top-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-light);
+    color: var(--green-dark);
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .top-badge svg { flex-shrink: 0; }
+
+  /* HERO - light, dark text, blue accent */
+  .hero {
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px max(16px, env(safe-area-inset-left, 0px)) 8px;
+  }
+  .hero h1 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: clamp(26px, 7.2vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    text-wrap: balance;
+    color: var(--fg);
+    margin-bottom: 14px;
+  }
+  .hero h1 span { color: var(--blue); }
+  .hero-sub {
+    font-size: 14px;
+    color: var(--fg-muted);
+    max-width: 380px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .hero-sub strong { color: var(--fg); font-weight: 700; }
+
+  /* TIMER - white rounded card, red text */
+  .timer-card {
+    background: var(--surface);
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    padding: 16px 20px;
+    text-align: center;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .timer-label {
+    color: var(--red);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .timer-digits {
+    color: var(--red);
+    font-size: 18px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+  }
+
+  /* TRUST pills */
+  .trust-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 16px 0 20px;
+  }
+  .trust-item {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--fg-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .trust-item svg { flex-shrink: 0; color: var(--green); }
+
+  /* SECTION CARD */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 20px;
+    margin: 14px 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green-dark);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .section-title {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 16px;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--fg);
+  }
+
+  /* URGENCY - white card, red left border */
+  .urgency-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--red);
+    border-radius: 14px;
+    padding: 20px;
+    margin: 14px 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  }
+  .urgency-box h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 14px;
+  }
+  .urgency-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .urgency-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--fg);
+  }
+  .urgency-list li .icon-x { width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; }
+
+  /* BLUE BOX - royal blue gradient */
+  .blue-box {
+    background: linear-gradient(140deg, #3b7bf0 0%, #2563eb 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 26px 22px;
+    margin: 14px 0;
+  }
+  .blue-box .eyebrow {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 auto 14px;
+  }
+  .blue-box-inner { text-align: center; }
+  .blue-box h2 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    text-wrap: balance;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+  .blue-box p { font-size: 14px; color: #dce7ff; line-height: 1.65; text-align: left; }
+  .blue-box p strong { color: #fff; }
+
+  /* BENEFITS */
+  .benefits-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .benefits-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .benefit-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .benefit-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--fg); }
+  .benefit-text span { font-size: 12px; color: var(--fg-muted); }
+
+  /* STEPS */
+  .steps-list { display: flex; flex-direction: column; gap: 16px; }
+  .step-item { display: flex; align-items: flex-start; gap: 14px; }
+  .step-num {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-text strong { display: block; font-weight: 700; font-size: 14px; color: var(--fg); }
+  .step-text span { font-size: 13px; color: var(--fg-muted); }
+
+  .step-note {
+    background: var(--green-light);
+    border: 1px solid #c3eecd;
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--green-dark);
+    line-height: 1.55;
+  }
+
+  /* PRICE - cream card, yellow price */
+  .price-box {
+    background: var(--gold-light);
+    border: 1px solid #ffe8ad;
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    margin: 14px 0;
+  }
+  .price-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+  .price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-align: left;
+  }
+  .price-row .label { color: var(--fg); font-weight: 500; }
+  .price-row .value { font-weight: 700; }
+  .price-row .value.gold { color: var(--gold); }
+  .price-row .value.red { color: var(--red); }
+
+  .price-caption { font-size: 13px; color: var(--fg-muted); margin: 14px 0 6px; line-height: 1.5; }
+  .price-big {
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+    margin: 6px 0 18px;
+    line-height: 1;
+  }
+
+  /* CTA */
+  .cta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    background: linear-gradient(180deg, #22b957 0%, #159a44 100%);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 18px 20px;
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 1.25;
+    box-shadow: 0 6px 18px rgba(26,166,75,0.35);
+    transition: filter 0.15s;
+    text-decoration: none;
+  }
+  .cta-btn:hover, .cta-btn:focus { filter: brightness(1.07); outline: none; }
+  .cta-btn svg { flex-shrink: 0; }
+  .cta-trust {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--fg-muted);
+  }
+  .cta-trust span { display: flex; align-items: center; gap: 4px; }
+  .cta-trust .dot-green { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+
+  /* GUARANTEE */
+  .guarantee-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    font-size: 13px;
+    color: var(--fg);
+    line-height: 1.6;
+    margin: 14px 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  }
+  .guarantee-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .guarantee-box .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-light);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--green-dark);
+    font-weight: 600;
+    margin-top: 12px;
+  }
+  .dot-green { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; }
+
+  /* TESTIMONIALS */
+  .testimonials { display: flex; flex-direction: column; gap: 12px; }
+  .testimonial {
+    background: #f6f9f6;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .testimonial-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    font-weight: 700;
+    color: var(--blue);
+  }
+  .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  .t-name { font-size: 14px; font-weight: 700; color: var(--fg); }
+  .t-head-right { display: flex; align-items: center; gap: 8px; }
+  .t-meta { font-size: 11px; color: var(--fg-muted); }
+  .stars { color: #f5a623; font-size: 13px; letter-spacing: 1px; }
+  .testimonial p { font-size: 13px; color: var(--fg); line-height: 1.6; }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 10px; }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .faq-item.open { border-color: #bfe8c9; }
+  .faq-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fg);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .faq-btn .arrow { flex-shrink: 0; transition: transform 0.2s; color: var(--green); }
+  .faq-item.open .arrow { transform: rotate(90deg); }
+  .faq-answer {
+    font-size: 13px;
+    color: var(--fg-muted);
+    line-height: 1.65;
+    padding: 0 16px 16px;
+    display: none;
+  }
+  .faq-item.open .faq-answer { display: block; }
+
+  /* FOOTER - green gradient with white card */
+  .footer-section {
+    background: linear-gradient(175deg, #d4efd6 0%, #a9ddad 100%);
+    padding: 30px max(16px, env(safe-area-inset-left, 0px)) 24px;
+    margin-top: 20px;
+  }
+  .footer-card {
+    background: var(--surface);
+    border-radius: 18px;
+    padding: 26px 22px;
+    text-align: center;
+    max-width: 448px;
+    margin: 0 auto;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+  }
+  .footer-logo {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 30px;
+  }
+  .timer-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--red);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .timer-pill .timer-digits { color: #fff; font-size: 15px; }
+  .footer-card p { font-size: 13px; color: var(--fg-muted); margin-bottom: 14px; line-height: 1.55; }
+  .footer-card h2 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--fg);
+    margin-bottom: 8px;
+    text-wrap: balance;
+  }
+
+  footer {
+    text-align: center;
+    padding: 18px max(16px, env(safe-area-inset-left, 0px)) 24px;
+    font-size: 11px;
+    color: var(--fg-muted);
+    background: #a9ddad;
+    line-height: 1.6;
+  }
+  footer a { color: var(--green-dark); }
+
+  /* MODAL - delivery email, styled like the print */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(12, 28, 18, 0.55);
+    backdrop-filter: blur(3px);
+    padding: max(20px, env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) max(20px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-card {
+    background: var(--surface);
+    border-radius: 22px;
+    padding: 34px 26px 24px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+    position: relative;
+    animation: popIn 0.25s ease;
+  }
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: #eef1ee;
+    border-radius: 50%;
+    color: var(--fg-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .modal-close:hover { background: #e2e6e2; }
+  .modal-icon {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: var(--green-light);
+    border: 1px solid #c3eecd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    color: var(--green);
+  }
+  .modal-card h2 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    text-transform: uppercase;
+    color: var(--fg);
+    margin-bottom: 12px;
+    line-height: 1.15;
+  }
+  .modal-sub {
+    font-size: 14px;
+    color: var(--fg-muted);
+    line-height: 1.55;
+    margin-bottom: 22px;
+  }
+  .modal-sub strong { color: var(--green); font-weight: 700; }
+  .modal-label {
+    display: block;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    margin-bottom: 8px;
+  }
+  .modal-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 30px;
+    padding: 15px 20px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #f6f9f6;
+    color: var(--fg);
+    text-align: center;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .modal-input:focus { border-color: var(--green); }
+  .modal-input::placeholder { color: #a8b3ab; }
+  .modal-error {
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 600;
+    margin: -8px 0 12px;
+    display: none;
+  }
+  .modal-trust {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--fg-muted);
+    flex-wrap: wrap;
+  }
+  .modal-trust span { display: flex; align-items: center; gap: 4px; }
+  .modal-trust svg { color: var(--green); }
+  .modal-success-icon {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+  }
+
+  /* EXIT-INTENT POPUP */
+  .exit-card {
+    background: var(--surface);
+    border-radius: 22px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    position: relative;
+    overflow: hidden;
+    animation: popIn 0.25s ease;
+  }
+  .exit-banner {
+    background: linear-gradient(90deg, #f43f5e, #e11d2e);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .exit-body { padding: 24px 24px 22px; }
+  .exit-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 28px;
+  }
+  .exit-card h2 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--fg);
+    margin-bottom: 12px;
+    line-height: 1.22;
+  }
+  .exit-card h2 span { color: var(--green); }
+  .exit-sub {
+    font-size: 13.5px;
+    color: var(--fg-muted);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+  .exit-sub strong { color: var(--fg); font-weight: 700; }
+  .exit-sub .green { color: var(--green); font-weight: 700; }
+  .exit-highlights {
+    background: var(--green-light);
+    border: 1px solid #c3eecd;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    text-align: left;
+  }
+  .exit-highlights div { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--fg); }
+  .exit-highlights div strong { font-weight: 700; }
+  .exit-highlights svg { color: var(--green); flex-shrink: 0; }
+  .exit-leave {
+    display: block;
+    background: none;
+    border: none;
+    width: 100%;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--fg-muted);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .exit-leave:hover { color: var(--fg); }
+  .exit-footer {
+    font-size: 11px;
+    color: var(--fg-muted);
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+</style>
+
+<!-- TOP BADGE -->
+<div class="top-badge-wrap">
+  <span class="top-badge">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+    EBOOK DE MÁGICAS LIBERADO
+  </span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Aprenda a fazer <span>mágicas incríveis</span> e impressione qualquer pessoa</h1>
+</div>
+
+<div class="wrap">
+  <p class="hero-sub">
+    O <strong>Manual Completo de Mágicas</strong> já está disponível para você.
+    Mais de <strong>60 técnicas passo a passo</strong>, prontas para dominar hoje.
+  </p>
+
+  <!-- TIMER -->
+  <div class="timer-card">
+    <span class="timer-label">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Tempo limite da oferta:
+    </span>
+    <span class="timer-digits" id="timer">12:00</span>
+  </div>
+
+  <!-- TRUST -->
+  <div class="trust-row">
+    <div class="trust-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      100% Seguro
+    </div>
+    <div class="trust-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Acesso imediato
+    </div>
+    <div class="trust-item">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Dados protegidos
+    </div>
+  </div>
+
+  <!-- URGENCY -->
+  <div class="urgency-box">
+    <h2>Atenção: Oferta por Tempo Limitado</h2>
+    <ul class="urgency-list">
+      <li>
+        <svg class="icon-x" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#e11d2e"/><path d="M15 9l-6 6M9 9l6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        Preço de lançamento encerra quando o contador zerar
+      </li>
+      <li>
+        <svg class="icon-x" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#e11d2e"/><path d="M15 9l-6 6M9 9l6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        Os bônus exclusivos são removidos após esse período
+      </li>
+      <li>
+        <svg class="icon-x" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#e11d2e"/><path d="M15 9l-6 6M9 9l6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        O acesso ao grupo VIP de mágicos encerra em breve
+      </li>
+      <li>
+        <svg class="icon-x" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#e11d2e"/><path d="M15 9l-6 6M9 9l6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        As vagas para o suporte individual são limitadas
+      </li>
+    </ul>
+  </div>
+
+  <!-- BLUE BOX -->
+  <div class="blue-box">
+    <div class="blue-box-inner" style="text-align:center;">
+      <span class="eyebrow">O QUE ESTÁ INCLUÍDO</span>
+    </div>
+    <h2>O que você vai aprender com este ebook?</h2>
+    <p>O <strong>Manual Completo de Mágicas</strong> reúne técnicas ensinadas em cursos que custam centenas de reais — agora num guia direto, didático e acessível para qualquer pessoa começar hoje.</p>
+  </div>
+
+  <!-- BENEFITS -->
+  <div class="section">
+    <p class="section-eyebrow">Ao adquirir agora, você garante:</p>
+    <ul class="benefits-list">
+      <li>
+        <div class="benefit-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#148a3e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="benefit-text">
+          <strong>60+ Mágicas Passo a Passo</strong>
+          <span>Com cartas, moedas, objetos do dia a dia e mãos livres</span>
+        </div>
+      </li>
+      <li>
+        <div class="benefit-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#148a3e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="benefit-text">
+          <strong>Técnicas de Mentalismo</strong>
+          <span>Leia pensamentos e surpreenda com ilusões psicológicas</span>
+        </div>
+      </li>
+      <li>
+        <div class="benefit-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#148a3e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="benefit-text">
+          <strong>Grupo VIP dos Leitores</strong>
+          <span>Acesso exclusivo à comunidade de mágicos iniciantes</span>
+        </div>
+      </li>
+      <li>
+        <div class="benefit-check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#148a3e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="benefit-text">
+          <strong>Suporte Direto por E-mail</strong>
+          <span>Tire dúvidas sobre qualquer técnica do ebook</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- STEPS -->
+  <div class="section">
+    <p class="section-title">Como Acessar o Ebook</p>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Clique no Botão Verde</strong>
+          <span>Desça a página e clique em "Quero o Ebook Agora"</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Informe Seu E-mail</strong>
+          <span>O acesso é enviado direto para sua caixa de entrada</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Efetue o Pagamento Único</strong>
+          <span>Sem mensalidade — pague uma vez e tenha acesso para sempre</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <strong>Comece a Aprender Hoje</strong>
+          <span>Acesso imediato ao ebook completo e todos os bônus</span>
+        </div>
+      </div>
+    </div>
+    <div class="step-note">
+      <strong>Atenção:</strong> o acesso é enviado por e-mail logo após a confirmação do pagamento. Verifique também a caixa de spam.
+    </div>
+  </div>
+
+  <!-- PRICE -->
+  <div class="price-box">
+    <div class="price-eyebrow">EXTRATO DO PEDIDO</div>
+    <div class="price-row">
+      <span class="label">Manual Completo de Mágicas (PDF)</span>
+      <span class="value gold">R$ 97,00</span>
+    </div>
+    <div class="price-row">
+      <span class="label">Desconto de lançamento</span>
+      <span class="value red">- R$ 50,00</span>
+    </div>
+    <p class="price-caption">Por tempo limitado, você leva o ebook completo com todos os bônus por apenas:</p>
+    <div class="price-big">R$ 47,00</div>
+    <a href="#checkout" class="cta-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      QUERO O EBOOK POR R$ 47 AGORA
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+    <div class="cta-trust">
+      <span><span class="dot-green"></span> PIX ou cartão</span>
+      <span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Checkout seguro
+      </span>
+    </div>
+  </div>
+
+  <!-- GUARANTEE -->
+  <div class="guarantee-box">
+    <h3>🎩 Garantia de 7 Dias</h3>
+    Se por qualquer motivo você não ficar satisfeito com o ebook nos primeiros 7 dias, devolvemos <strong>100% do valor pago</strong> — sem perguntas, sem burocracia.
+    <div class="live-badge">
+      <span class="dot-green"></span>
+      +3.200 leitores já aprenderam mágicas nesta semana
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section">
+    <p class="section-eyebrow">Quem já leu, recomenda</p>
+    <p class="section-title" style="font-size:18px;">Histórias de Quem Já Aprendeu</p>
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="testimonial-header">
+          <div class="avatar"><img src="data:image/jpeg;base64,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" alt="Ana Beatriz"></div>
+          <div>
+            <div class="t-name">Ana Beatriz</div>
+            <div class="t-head-right"><span class="stars">★★★★★</span><span class="t-meta">· há 2 h</span></div>
+          </div>
+        </div>
+        <p>Achei que seria difícil, mas as explicações são super claras. Em uma tarde aprendi 5 mágicas com baralho que minha família adorou!</p>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-header">
+          <div class="avatar"><img src="data:image/jpeg;base64,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" alt="Rafael Torres"></div>
+          <div>
+            <div class="t-name">Rafael Torres</div>
+            <div class="t-head-right"><span class="stars">★★★★★</span><span class="t-meta">· há 5 h</span></div>
+          </div>
+        </div>
+        <p>Comprei para fazer na festa da minha filha. O pessoal ficou boquiaberto! As mágicas com moedas são incríveis e fáceis de aprender.</p>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-header">
+          <div class="avatar"><img src="data:image/jpeg;base64,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" alt="Marcos Silva"></div>
+          <div>
+            <div class="t-name">Marcos Silva</div>
+            <div class="t-head-right"><span class="stars">★★★★★</span><span class="t-meta">· há 1 dia</span></div>
+          </div>
+        </div>
+        <p>Material completo e bem organizado. Fui do zero a impressionar os amigos no churrasco de domingo. Melhor investimento da semana.</p>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-header">
+          <div class="avatar"><img src="data:image/jpeg;base64,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" alt="Simone Albuquerque"></div>
+          <div>
+            <div class="t-name">Simone Albuquerque</div>
+            <div class="t-head-right"><span class="stars">★★★★★</span><span class="t-meta">· há 2 dias</span></div>
+          </div>
+        </div>
+        <p>Já tentei outros tutoriais na internet, mas eram confusos. Este ebook é didático de verdade — com ilustrações e descrição de cada movimento.</p>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-header">
+          <div class="avatar"><img src="data:image/jpeg;base64,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" alt="Fernando Costa"></div>
+          <div>
+            <div class="t-name">Fernando Costa</div>
+            <div class="t-head-right"><span class="stars">★★★★★</span><span class="t-meta">· há 3 dias</span></div>
+          </div>
+        </div>
+        <p>Vale demais! Aprendi as mágicas de mentalismo e usei na apresentação da escola dos meus filhos. Todo mundo ficou impressionado!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <p class="section-eyebrow" style="margin-bottom:4px;">Dúvidas Frequentes</p>
+    <p class="section-title" style="font-size:18px;margin-bottom:16px;">FAQ</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-btn">
+          1. Preciso de alguma experiência prévia?
+          <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="faq-answer">Não! O ebook foi criado do zero ao avançado. Os primeiros capítulos ensinam conceitos básicos e você evolui no seu ritmo.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn">
+          2. Em qual formato vem o ebook?
+          <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="faq-answer">O ebook é entregue em PDF, compatível com celular, tablet e computador. Você baixa uma vez e acessa para sempre, até offline.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn">
+          3. Quanto tempo levo para aprender as mágicas?
+          <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="faq-answer">As mágicas mais simples podem ser aprendidas em 15 minutos. As mais elaboradas pedem alguns dias de prática — tudo depende da sua dedicação.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn">
+          4. Preciso comprar materiais especiais?
+          <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="faq-answer">A maioria usa objetos do dia a dia — baralho, moedas, caneta, papel. Menos de 10% das técnicas pede materiais específicos, sempre baratos e acessíveis.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn">
+          5. Posso acessar pelo celular?
+          <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <div class="faq-answer">Sim! O PDF é totalmente responsivo e legível em qualquer tela. Dá para praticar a mágica e consultar o guia ao mesmo tempo no celular.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-section">
+  <div class="footer-card">
+    <img src="/public/logozuda.webp" alt="logo" style="width:36px;height:36px;object-fit:contain;display:block;margin:0 auto 8px;">
+    <div class="timer-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Tempo restante: <span class="timer-digits" id="timer2">12:00</span>
+    </div>
+    <p>Se você sair sem garantir agora, o desconto expira e os bônus são removidos automaticamente.</p>
+    <h2>O EBOOK ESTÁ ESPERANDO POR VOCÊ.</h2>
+    <p>Tudo pronto. O acesso é imediato. Falta só você dar o próximo passo.</p>
+    <a href="#checkout" class="cta-btn">
+      GARANTIR MEU EBOOK POR R$ 47
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
+</div>
+
+<footer>
+  © Manual de Mágicas Pro · contato@manualdemagicas.com · Oferta promocional · <a href="#">Termos de uso</a>
+</footer>
+
+<!-- DELIVERY EMAIL MODAL -->
+<div class="modal-overlay" id="modal" hidden>
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose" aria-label="Fechar">✕</button>
+
+    <div id="modalForm">
+      <div class="modal-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </div>
+      <h2>Pra onde enviamos seu ebook?</h2>
+      <p class="modal-sub">Informe o e-mail exato onde deseja receber o seu <strong>Manual de Mágicas</strong> agora mesmo.</p>
+      <form id="emailForm" novalidate>
+        <label class="modal-label" for="emailInput">Seu melhor e-mail</label>
+        <input class="modal-input" id="emailInput" type="email" placeholder="exemplo@email.com" autocomplete="email">
+        <div class="modal-error" id="emailError">Digite um e-mail válido.</div>
+        <button type="submit" class="cta-btn">
+          CONFIRMAR MEU E-MAIL
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </form>
+      <div class="modal-trust">
+        <span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          SSL 256-bit
+        </span>
+        <span>LGPD</span>
+        <span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Entrega imediata
+        </span>
+      </div>
+    </div>
+
+    <div id="modalSuccess" hidden>
+      <div class="modal-success-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>E-mail confirmado!</h2>
+      <p class="modal-sub">Prontinho! Seu ebook será enviado para <strong id="confirmedEmail"></strong>. Verifique também a caixa de spam.</p>
+    </div>
+  </div>
+</div>
+
+<!-- EXIT-INTENT POPUP (back button / leaving on mobile) -->
+<div class="modal-overlay" id="exitModal" hidden>
+  <div class="exit-card">
+    <div class="exit-banner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      ESPERA! SUA OFERTA ESTÁ QUASE EXPIRANDO
+    </div>
+    <div class="exit-body">
+      <div class="exit-icon">⚠️</div>
+      <h2>Faltam segundos para garantir seu ebook com <span>50% OFF</span></h2>
+      <p class="exit-sub">Seu desconto ainda está <strong>reservado</strong>. Se você sair agora, o valor volta para R$ 97,00 e os bônus são removidos. Não perca o Manual de Mágicas por apenas <span class="green">R$ 47,00</span>.</p>
+      <div class="exit-highlights">
+        <div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="16 9 11 14 8 11"/></svg>
+          <span><strong>+3.200 pessoas</strong> garantiram esta semana</span>
+        </div>
+        <div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Oferta disponível por <strong>mais alguns minutos</strong></span>
+        </div>
+      </div>
+      <button class="cta-btn" id="exitStay">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        QUERO GARANTIR MEU EBOOK
+      </button>
+      <button class="exit-leave" id="exitLeave">Sair e perder o desconto</button>
+      <p class="exit-footer">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Checkout seguro · Seu desconto expira ao sair
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function startCountdown(seconds) {
+    const els = [document.getElementById('timer'), document.getElementById('timer2')];
+    let remaining = seconds;
+    function update() {
+      const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+      const s = (remaining % 60).toString().padStart(2, '0');
+      const text = m + ':' + s;
+      els.forEach(el => { if (el) el.textContent = text; });
+      if (remaining > 0) { remaining--; setTimeout(update, 1000); }
+    }
+    update();
+  }
+  let savedTime;
+  try { savedTime = parseInt(sessionStorage.getItem('magic-timer') || '720', 10); } catch(e) { savedTime = 720; }
+  if (isNaN(savedTime)) savedTime = 720;
+  startCountdown(savedTime);
+  setInterval(() => {
+    try { sessionStorage.setItem('magic-timer', String(Math.max(0, savedTime--))); } catch(e) {}
+  }, 1000);
+
+  document.querySelectorAll('.faq-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Delivery email modal (opens on any green CTA link)
+  const modal = document.getElementById('modal');
+  function openModal() {
+    document.getElementById('modalForm').hidden = false;
+    document.getElementById('modalSuccess').hidden = true;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('emailInput').focus(), 120);
+  }
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('a.cta-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+  });
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+  document.getElementById('emailForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('emailInput');
+    const err = document.getElementById('emailError');
+    const val = input.value.trim();
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    if (!valid) { err.style.display = 'block'; input.focus(); return; }
+    err.style.display = 'none';
+    document.getElementById('confirmedEmail').textContent = val;
+    document.getElementById('modalForm').hidden = true;
+    document.getElementById('modalSuccess').hidden = false;
+  });
+
+  // Exit-intent: trap the mobile back button and warn on close
+  const exitModal = document.getElementById('exitModal');
+  let allowLeave = false;
+
+  function showExit() {
+    if (!modal.hidden) return;            // don't stack over the email modal
+    if (!exitModal.hidden) return;        // already open
+    exitModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function hideExit() {
+    exitModal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  // Arm the back-button trap only after the visitor interacts (avoids firing on load)
+  let trapArmed = false;
+  function armTrap() {
+    if (trapArmed) return;
+    trapArmed = true;
+    try { history.pushState({ trap: true }, '', location.href); } catch (e) {}
+  }
+  ['pointerdown', 'touchstart', 'keydown'].forEach(ev =>
+    window.addEventListener(ev, armTrap, { passive: true })
+  );
+  window.addEventListener('popstate', () => {
+    if (allowLeave || !trapArmed) return;
+    // re-trap and show the warning instead of leaving
+    try { history.pushState({ trap: true }, '', location.href); } catch (e) {}
+    showExit();
+  });
+
+  document.getElementById('exitStay').addEventListener('click', () => {
+    hideExit();
+    openModal(); // leva para a captura de e-mail
+  });
+  document.getElementById('exitLeave').addEventListener('click', () => {
+    allowLeave = true;
+    hideExit();
+    try { history.back(); } catch (e) {}
+  });
+  exitModal.addEventListener('click', (e) => { if (e.target === exitModal) hideExit(); });
+
+  // Warn when closing/refreshing the tab (native browser dialog)
+  window.addEventListener('beforeunload', (e) => {
+    if (allowLeave || !trapArmed) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+</script>
+
+</body>
+</html>
