@@ -3,11 +3,13 @@
   "builds": [
     { "src": "server.js", "use": "@vercel/node" },
     { "src": "videos/**", "use": "@vercel/static" },
-    { "src": "logozuda.webp", "use": "@vercel/static" }
+    { "src": "logozuda.webp", "use": "@vercel/static" },
+    { "src": "favicon.svg", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/videos/(.*)", "dest": "/videos/$1" },
     { "src": "/logozuda.webp", "dest": "/logozuda.webp" },
+    { "src": "/favicon.svg", "dest": "/favicon.svg" },
     { "src": "/(.*)", "dest": "/server.js" }
   ]
 }
