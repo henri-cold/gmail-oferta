@@ -195,7 +195,10 @@ app.get('/api/product', (_req, res) => {
 });
 
 // ---- Arquivos estáticos ----
-app.use(express.static(__dirname)); // serve index.html (landing)
+app.use(express.static(__dirname));
+app.get('/', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 app.get('/checkout', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'checkout.html'));
 });
