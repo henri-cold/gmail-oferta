@@ -195,7 +195,13 @@ app.get('/api/product', (_req, res) => {
 });
 
 // ---- Arquivos estáticos ----
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname)));
+app.get('/logozuda.webp', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'logozuda.webp'));
+});
+app.get('/videos/vsl.mp4', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'videos', 'vsl.mp4'));
+});
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
