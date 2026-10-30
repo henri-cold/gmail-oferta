@@ -5,13 +5,15 @@
     { "src": "videos/**", "use": "@vercel/static" },
     { "src": "logozuda.webp", "use": "@vercel/static" },
     { "src": "favicon.svg", "use": "@vercel/static" },
-    { "src": "instagram.png", "use": "@vercel/static" }
+    { "src": "instagram.png", "use": "@vercel/static" },
+    { "src": "piximage.jpg", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/videos/(.*)", "dest": "/videos/$1" },
     { "src": "/logozuda.webp", "dest": "/logozuda.webp" },
     { "src": "/favicon.svg", "dest": "/favicon.svg" },
     { "src": "/instagram.png", "dest": "/instagram.png" },
+    { "src": "/piximage.jpg", "dest": "/piximage.jpg" },
     { "src": "/(.*)", "dest": "/server.js" }
   ]
 }

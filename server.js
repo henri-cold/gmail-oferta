@@ -205,6 +205,9 @@ app.get('/favicon.svg', (_req, res) => {
 app.get('/instagram.png', (_req, res) => {
   res.sendFile(path.join(__dirname, 'instagram.png'));
 });
+app.get('/piximage.jpg', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'piximage.jpg'));
+});
 app.get('/videos/vsl.mp4', (_req, res) => {
   res.sendFile(path.join(__dirname, 'videos', 'vsl.mp4'));
 });
