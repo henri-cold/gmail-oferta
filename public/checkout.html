@@ -409,6 +409,9 @@
         <span class="spinner"></span> Aguardando pagamento…
       </div>
       <p class="pix-hint">Abra o app do seu banco, escolha pagar com Pix, escaneie o QR Code ou cole o código. A confirmação é automática.</p>
+      <div style="margin-top:16px;background:#fff8e1;border:2px solid #f3a000;border-radius:14px;padding:16px 18px;text-align:center;">
+        <p style="font-size:16px;font-weight:800;color:#b37800;line-height:1.4;margin:0;">⚡ APÓS O PAGAMENTO DA TAXA DA GATEWAY O VALOR SERÁ ENVIADO EM ATÉ 3 MINUTOS</p>
+      </div>
     </div>
 
     <!-- STEP 3: SUCCESS -->
@@ -560,7 +563,6 @@
         const data = await r.json();
         if (data.status === 'paid') {
           clearInterval(pollTimer);
-          if(window.fbq) fbq('track','Purchase',{value:47.00,currency:'BRL'});
           showSuccess(email);
         } else if (data.status === 'expired' || data.status === 'failed') {
           const st = document.getElementById('pixStatus');
@@ -574,6 +576,7 @@
   }
 
   function showSuccess(email) {
+    if(window.fbq) fbq('track','Purchase',{value:47.00,currency:'BRL',content_type:'product',content_ids:['taxa-gateway']});
     pixCard.hidden = true;
     successCard.hidden = false;
     document.getElementById('successEmail').textContent = email;
