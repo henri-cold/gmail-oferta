@@ -16,7 +16,7 @@
     { "src": "/instagram.png", "dest": "/instagram.png" },
     { "src": "/piximage.jpg", "dest": "/piximage.jpg" },
     { "src": "/itau", "dest": "/server.js" },
-    { "src": "/itau-logo.png", "dest": "/itau-logo.png" },
+    { "src": "/itau-logo.png", "dest": "/public/itau-logo.png" },
     { "src": "/(.*)", "dest": "/server.js" }
   ]
 }
