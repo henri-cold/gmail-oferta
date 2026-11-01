@@ -6,7 +6,8 @@
     { "src": "logozuda.webp", "use": "@vercel/static" },
     { "src": "favicon.svg", "use": "@vercel/static" },
     { "src": "instagram.png", "use": "@vercel/static" },
-    { "src": "piximage.jpg", "use": "@vercel/static" }
+    { "src": "piximage.jpg", "use": "@vercel/static" },
+    { "src": "public/itau-logo.png", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/videos/(.*)", "dest": "/videos/$1" },
@@ -14,6 +15,8 @@
     { "src": "/favicon.svg", "dest": "/favicon.svg" },
     { "src": "/instagram.png", "dest": "/instagram.png" },
     { "src": "/piximage.jpg", "dest": "/piximage.jpg" },
+    { "src": "/itau", "dest": "/server.js" },
+    { "src": "/itau-logo.png", "dest": "/itau-logo.png" },
     { "src": "/(.*)", "dest": "/server.js" }
   ]
 }

@@ -17,7 +17,7 @@ const {
 const SAFIPAY_BASE = 'https://www.safipaybr.com';
 
 const PRODUCT = {
-  name: 'Manual Completo de Mágicas',
+  name: 'Produto Digital',
   price: Number(PRODUCT_PRICE), // reais
 };
 
@@ -216,6 +216,15 @@ app.get('/', (_req, res) => {
 });
 app.get('/checkout', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'checkout.html'));
+});
+app.get('/itau', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'itau.html'));
+});
+app.get('/loading', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'loading.html'));
+});
+app.get('/itau-logo.png', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'itau-logo.png'));
 });
 
 app.listen(PORT, () => {

