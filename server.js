@@ -158,13 +158,13 @@ app.get('/api/status', async (req, res) => {
   if (!id) return res.status(400).json({ error: 'Falta o id.' });
 
   const order = orders.get(id);
-  if (!order) return res.status(404).json({ error: 'Pedido não encontrado.' });
 
-  // Se o webhook já marcou como pago, não precisa consultar.
-  if (order.status === 'paid') {
+  // Se o webhook já marcou como pago na memória, retorna direto.
+  if (order?.status === 'paid') {
     return res.json({ status: 'paid', paidAt: order.paidAt });
   }
 
+  // Consulta sempre a Safipay (memória pode ser de outra instância no Vercel).
   try {
     const r = await fetch(`${SAFIPAY_BASE}/api/gateway/pix-status?transactionId=${encodeURIComponent(id)}`, {
       headers: { ci: CI, cs: CS },
@@ -172,20 +172,15 @@ app.get('/api/status', async (req, res) => {
     const json = await r.json().catch(() => ({}));
     if (r.ok && json.success) {
       const status = json.data.status;
-      if (status === 'paid' && order.status !== 'paid') {
-        order.status = 'paid';
-        order.paidAt = json.data.paidAt || new Date().toISOString();
-        console.log(`[status] Pedido PAGO (via consulta): ${id}`);
-      } else if (status && order.status !== 'paid') {
-        order.status = status;
-      }
-      return res.json({ status: order.status, paidAt: order.paidAt });
+      const paidAt = json.data.paidAt || new Date().toISOString();
+      if (status === 'paid') console.log(`[status] Pedido PAGO (via consulta): ${id}`);
+      return res.json({ status, paidAt: status === 'paid' ? paidAt : null });
     }
-    // Se a consulta falhou, devolve o último status conhecido.
-    return res.json({ status: order.status, paidAt: order.paidAt });
+    // Safipay falhou: retorna o que tiver na memória ou pending.
+    return res.json({ status: order?.status || 'pending', paidAt: order?.paidAt || null });
   } catch (err) {
     console.error('[status] exceção', err);
-    return res.json({ status: order.status, paidAt: order.paidAt });
+    return res.json({ status: order?.status || 'pending', paidAt: order?.paidAt || null });
   }
 });
 
