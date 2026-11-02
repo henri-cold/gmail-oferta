@@ -99,23 +99,32 @@ app.post('/webhooks/safipay', express.raw({ type: '*/*' }), (req, res) => {
   if (!data || !data.transactionId) return;
 
   const order = orders.get(data.transactionId);
-  if (!order) return; // webhook de pedido que não é nosso
-
-  // Idempotente por transactionId + event
-  const key = `${data.transactionId}:${event}`;
-  if (order._processed?.has(key)) return;
-  order._processed = order._processed || new Set();
-  order._processed.add(key);
 
   if (event === 'pix.paid') {
-    order.status = 'paid';
-    order.paidAt = data.paidAt || new Date().toISOString();
+    // Manda CAPI independente de ter o pedido na memória desta instância Vercel.
+    sendCapiPurchase({
+      transactionId: data.transactionId,
+      amount: order?.amount ?? data.amount ?? Number(PRODUCT_PRICE),
+      email: order?.email,
+      name: order?.name,
+    });
+    if (order) {
+      order.status = 'paid';
+      order.paidAt = data.paidAt || new Date().toISOString();
+    }
     console.log(`[webhook] Pedido PAGO: ${data.transactionId}`);
-    sendCapiPurchase({ transactionId: data.transactionId, amount: order.amount, email: order.email, name: order.name });
-  } else if (event === 'pix.expired') {
-    if (order.status !== 'paid') order.status = 'expired';
-  } else if (event === 'pix.failed') {
-    if (order.status !== 'paid') order.status = 'failed';
+  } else if (order) {
+    // Idempotente por transactionId + event (só para eventos com pedido na memória)
+    const key = `${data.transactionId}:${event}`;
+    if (order._processed?.has(key)) return;
+    order._processed = order._processed || new Set();
+    order._processed.add(key);
+
+    if (event === 'pix.expired') {
+      if (order.status !== 'paid') order.status = 'expired';
+    } else if (event === 'pix.failed') {
+      if (order.status !== 'paid') order.status = 'failed';
+    }
   }
 });
 
