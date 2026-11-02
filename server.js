@@ -12,6 +12,8 @@ const {
   SAFIPAY_WEBHOOK_SECRET: WEBHOOK_SECRET = '',
   PORT = 3000,
   PRODUCT_PRICE = '47.00',
+  CAPI_ACCESS_TOKEN = '',
+  CAPI_PIXEL_ID = '1514561190722182',
 } = process.env;
 
 const SAFIPAY_BASE = 'https://www.safipaybr.com';
@@ -26,9 +28,39 @@ if (!CI || !CS) {
   process.exit(1);
 }
 
-// Armazenamento simples em memória. Em produção, use um banco de dados
-// e grave transactionId + status junto de cada pedido.
-const orders = new Map(); // transactionId -> { status, amount, fee, netAmount, email, name, createdAt, paidAt }
+const orders = new Map();
+
+async function sendCapiPurchase({ transactionId, amount, email, name }) {
+  if (!CAPI_ACCESS_TOKEN) return;
+  const userData = {};
+  if (email) userData.em = [crypto.createHash('sha256').update(email.trim().toLowerCase()).digest('hex')];
+  if (name) {
+    const parts = name.trim().toLowerCase().split(/\s+/);
+    userData.fn = [crypto.createHash('sha256').update(parts[0]).digest('hex')];
+    if (parts.length > 1) userData.ln = [crypto.createHash('sha256').update(parts[parts.length - 1]).digest('hex')];
+  }
+  const payload = {
+    data: [{
+      event_name: 'Purchase',
+      event_time: Math.floor(Date.now() / 1000),
+      action_source: 'website',
+      event_id: transactionId,
+      user_data: userData,
+      custom_data: { value: amount, currency: 'BRL' },
+    }],
+  };
+  try {
+    const r = await fetch(`https://graph.facebook.com/v18.0/${CAPI_PIXEL_ID}/events?access_token=${CAPI_ACCESS_TOKEN}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const json = await r.json().catch(() => ({}));
+    console.log(`[capi] Purchase enviado: ${transactionId}`, json.events_received ?? json);
+  } catch (err) {
+    console.error('[capi] erro ao enviar Purchase:', err);
+  }
+} // transactionId -> { status, amount, fee, netAmount, email, name, createdAt, paidAt }
 
 const app = express();
 
@@ -79,7 +111,7 @@ app.post('/webhooks/safipay', express.raw({ type: '*/*' }), (req, res) => {
     order.status = 'paid';
     order.paidAt = data.paidAt || new Date().toISOString();
     console.log(`[webhook] Pedido PAGO: ${data.transactionId}`);
-    // Aqui você libera o produto (envia o ebook por e-mail, etc.)
+    sendCapiPurchase({ transactionId: data.transactionId, amount: order.amount, email: order.email, name: order.name });
   } else if (event === 'pix.expired') {
     if (order.status !== 'paid') order.status = 'expired';
   } else if (event === 'pix.failed') {
@@ -173,7 +205,13 @@ app.get('/api/status', async (req, res) => {
     if (r.ok && json.success) {
       const status = json.data.status;
       const paidAt = json.data.paidAt || new Date().toISOString();
-      if (status === 'paid') console.log(`[status] Pedido PAGO (via consulta): ${id}`);
+      if (status === 'paid') {
+        console.log(`[status] Pedido PAGO (via consulta): ${id}`);
+        if (!order?._capiSent) {
+          if (order) order._capiSent = true;
+          sendCapiPurchase({ transactionId: id, amount: order?.amount ?? json.data.amount, email: order?.email, name: order?.name });
+        }
+      }
       return res.json({ status, paidAt: status === 'paid' ? paidAt : null });
     }
     // Safipay falhou: retorna o que tiver na memória ou pending.
