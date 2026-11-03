@@ -256,6 +256,12 @@ app.get('/videos/vsl.mp4', (_req, res) => {
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+app.get('/index2', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'index2.html'));
+});
+app.get('/index3', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'index3.html'));
+});
 app.get('/checkout', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'checkout.html'));
 });

