@@ -754,12 +754,12 @@ function addItauComprovante(nome, cpf){
   var imgSrc='/api/comprovante-png?nome='+encodeURIComponent(nome)+'&cpf='+encodeURIComponent(cpfNum);
   var fullSrc='/itau?nome='+encodeURIComponent(nome)+'&cpf='+encodeURIComponent(cpfNum);
   var cvId='cv_'+Date.now();
-  row.innerHTML='<img class="bot-avatar" src="/atendente.png" alt="Isa"><div style="min-width:0;overflow:hidden;flex:1">'+
-    '<div style="line-height:0;width:100%">'+
-    '<a href="'+fullSrc+'" target="_blank" style="display:block;line-height:0">'+
-    '<img src="'+imgSrc+'" style="width:100%;max-width:300px;border-radius:16px;box-shadow:0 1px 6px rgba(60,64,67,.2);display:block;cursor:pointer" alt="Comprovante PIX" onerror="this.parentElement.style.display=\'none\';document.getElementById(\''+cvId+'\').style.display=\'block\'">'+
+  row.innerHTML='<img class="bot-avatar" src="/atendente.png" alt="Isa"><div style="flex:1">'+
+    '<div style="width:100%">'+
+    '<a href="'+fullSrc+'" target="_blank" style="display:block">'+
+    '<img src="'+imgSrc+'" style="width:100%;max-width:min(320px,calc(100vw - 70px));border-radius:16px;box-shadow:0 1px 6px rgba(60,64,67,.2);display:block;cursor:pointer" alt="Comprovante PIX" onerror="this.parentElement.style.display=\'none\';document.getElementById(\''+cvId+'\').style.display=\'block\'">'+
     '</a>'+
-    '<iframe id="'+cvId+'" src="'+fullSrc+'" style="display:none;width:100%;max-width:300px;height:500px;border:none;border-radius:16px;box-shadow:0 1px 6px rgba(60,64,67,.2)" scrolling="no"></iframe>'+
+    '<iframe id="'+cvId+'" src="'+fullSrc+'" style="display:none;width:100%;max-width:min(320px,calc(100vw - 70px));height:auto;min-height:600px;border:none;border-radius:16px;box-shadow:0 1px 6px rgba(60,64,67,.2)" scrolling="yes"></iframe>'+
     '</div>'+
     '<span style="display:block;font-size:10px;color:#9aa0a6;text-align:right;margin-top:4px">'+now()+'</span>'+
   '</div>';
