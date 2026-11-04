@@ -124,20 +124,43 @@ body{font-family:'Google Sans','Roboto',system-ui,sans-serif;background:#f1f3f4;
   </div>
   <div class="bot-row" id="izaMessage" style="display:none;">
     <img class="bot-avatar" src="/atendente.png" alt="Iza">
-    <div class="bot-bubble">
-      <button id="playAudioBtn" onclick="playIzaAudio()" style="width:38px;height:38px;border-radius:50%;background:#1a73e8;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg id="audioIcon" width="14" height="14" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      </button>
-      <div style="flex:1;">
-        <div style="display:flex;gap:2px;align-items:flex-end;height:14px;margin-bottom:4px;">
-          <span style="flex:1;background:#1a73e8;border-radius:1px;height:40%;opacity:.7"></span>
-          <span style="flex:1;background:#1a73e8;border-radius:1px;height:70%;opacity:.7"></span>
-          <span style="flex:1;background:#1a73e8;border-radius:1px;height:55%;opacity:.7"></span>
-          <span style="flex:1;background:#1a73e8;border-radius:1px;height:60%;opacity:.7"></span>
+    <div><div class="bot-bubble" style="padding:10px 14px;min-width:220px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button id="playAudioBtn" onclick="playIzaAudio()" style="width:38px;height:38px;border-radius:50%;background:#1a73e8;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg id="audioIcon" width="14" height="14" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;justify-content:space-between;width:100%;height:28px">
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:40%;opacity:.5"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:70%;opacity:.7"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:55%"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:90%;opacity:.5"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:45%;opacity:.7"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:75%"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:60%;opacity:.5"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:85%;opacity:.7"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:50%"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:65%;opacity:.5"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:80%;opacity:.7"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:45%"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:70%;opacity:.5"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:55%;opacity:.7"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:35%"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:80%;opacity:.5"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:60%;opacity:.7"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:90%"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:50%;opacity:.5"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:75%;opacity:.7"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:40%"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:65%;opacity:.5"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:85%;opacity:.7"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:55%"></span>
+            <span style="flex:1;margin:0 1px;background:#1a73e8;border-radius:2px;height:70%;opacity:.5"></span>
+          </div>
+          <div style="font-size:11px;color:#9aa0a6;margin-top:2px" id="audioTime">aperte no azul para ouvir</div>
         </div>
-        <div style="font-size:11px;color:#9aa0a6;" id="audioTime">aperte para ouvir</div>
       </div>
-    </div>
+    </div></div>
   </div>
 
   <!-- CARD RESUMO -->
