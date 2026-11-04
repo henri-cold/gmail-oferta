@@ -104,40 +104,22 @@ body{font-family:'Google Sans','Roboto',system-ui,sans-serif;background:#f1f3f4;
 
 <div class="page">
 
-  <!-- ALERT: MENSAGEM PRINCIPAL -->
-  <div class="alert-box">
-    <div class="alert-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19h20L12 2z" fill="#fff"/><path d="M12 9v4M12 16.5h.01" stroke="#fbbc04" stroke-width="2.2" stroke-linecap="round"/></svg>
-    </div>
-    <div>
-      <div class="alert-title">Taxa de processamento necessária</div>
-      <div class="alert-text">Devido à alta demanda de saques, para que a transferência seja enviada, será necessário o pagamento da <strong>taxa de processamento de valores altos</strong> no valor de <strong>R$47,00</strong>. Este valor será usado como confirmação para liberar o pix agendado. Caso não seja pago, o pix será cancelado.</div>
-    </div>
-  </div>
-
-  <!-- POR QUE PAGAR A TAXA -->
-  <div class="card" style="border-left:4px solid #1a73e8;padding:20px 20px 20px 18px;">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-      <div style="width:32px;height:32px;background:#e8f0fe;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#1a73e8" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="#1a73e8" stroke-width="2.2" stroke-linecap="round"/></svg>
-      </div>
-      <span style="font-size:15px;font-weight:700;color:#202124;">Por que preciso pagar a taxa da gateway?</span>
-    </div>
-    <div style="font-size:14px;color:#3c4043;line-height:1.75;display:flex;flex-direction:column;gap:10px;">
-      <div style="display:flex;gap:10px;align-items:flex-start;">
-        <span style="color:#1a73e8;font-weight:700;flex-shrink:0;">1.</span>
-        <span><strong>Validação da chave PIX:</strong> a taxa confirma que a chave informada pertence ao titular cadastrado, garantindo que o valor não seja enviado para uma conta de terceiros por engano.</span>
-      </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;">
-        <span style="color:#1a73e8;font-weight:700;flex-shrink:0;">2.</span>
-        <span><strong>Verificação de titularidade:</strong> o pagamento precisa ser feito com os <strong>mesmos dados que você cadastrou anteriormente</strong> (nome e CPF), confirmando que o pedido de saque é legítimo e não está sendo feito em nome de outra pessoa.</span>
-      </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;">
-        <span style="color:#1a73e8;font-weight:700;flex-shrink:0;">3.</span>
-        <span><strong>Liberação do saldo:</strong> após a confirmação, o sistema da gateway autoriza automaticamente o envio do Pix de R$17.658,00 para a sua chave em até 3 minutos.</span>
-      </div>
-      <div style="background:#e8f0fe;border-radius:8px;padding:12px 14px;margin-top:2px;">
-        <span style="font-size:13px;color:#1a73e8;font-weight:600;">⚠ Atenção: realize o pagamento da taxa com a mesma chave PIX cadastrada no seu perfil para evitar bloqueio do saque.</span>
+  <!-- AUDIO IZA -->
+  <div style="background:#e8f5e9;border:1px solid #a8d5b5;border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+    <audio id="izaAudio" src="/atendente_voz7.mp3" preload="auto"></audio>
+    <button id="playAudioBtn" onclick="playIzaAudio()" style="width:44px;height:44px;border-radius:50%;background:#1e8e3e;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg id="audioIcon" width="18" height="18" viewBox="0 0 24 24" fill="#fff"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </button>
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:14px;font-weight:600;color:#1e8e3e;margin-bottom:3px;">Iza está falando com você</div>
+      <div style="font-size:12px;color:#558b2f;display:flex;align-items:center;gap:8px;">
+        <div style="display:flex;gap:2px;align-items:flex-end;height:16px;">
+          <span style="flex:1;background:#558b2f;border-radius:1px;height:40%;opacity:.7"></span>
+          <span style="flex:1;background:#558b2f;border-radius:1px;height:70%;opacity:.7"></span>
+          <span style="flex:1;background:#558b2f;border-radius:1px;height:55%;opacity:.7"></span>
+          <span style="flex:1;background:#558b2f;border-radius:1px;height:60%;opacity:.7"></span>
+        </div>
+        <span id="audioTime" style="font-size:11px;white-space:nowrap;">aperte para ouvir</span>
       </div>
     </div>
   </div>
@@ -404,6 +386,34 @@ body{font-family:'Google Sans','Roboto',system-ui,sans-serif;background:#f1f3f4;
     document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'hidden') show(); });
     document.getElementById('exitOverlay').addEventListener('click', function(e){ if(e.target === this) this.style.display = 'none'; });
   })();
+
+  // AUDIO IZA
+  function playIzaAudio(){
+    var audio = document.getElementById('izaAudio');
+    var icon = document.getElementById('audioIcon');
+    var timeEl = document.getElementById('audioTime');
+    if(!audio) return;
+    if(!audio.paused){
+      audio.pause();
+      icon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+      return;
+    }
+    audio.play();
+    icon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    audio.ontimeupdate = function(){
+      var s = Math.floor(audio.currentTime);
+      timeEl.textContent = Math.floor(s/60) + ':' + (s%60<10?'0':'') + s%60;
+    };
+    audio.onended = function(){
+      icon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+      audio.currentTime = 0;
+      timeEl.textContent = 'aperte para ouvir';
+    };
+    audio.onerror = function(){};
+    setTimeout(function(){
+      if(!audio.paused) return;
+    }, (audio.duration>0 ? audio.duration*1000 : 30000) + 3000);
+  }
 </script>
 </body>
 </html>
