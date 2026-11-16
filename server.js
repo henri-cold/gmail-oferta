@@ -70,8 +70,24 @@ const ADMIN_USER = 'adm.henri';
 // sha256('IsaG00gle#2024!X' + '__srv9k2m')
 const ADMIN_PASS_HASH = crypto.createHash('sha256').update('IsaG00gle#2024!X__srv9k2m').digest('hex');
 
-async function sendCapiPurchase({ transactionId, amount, email, name }) {
-  if (!CAPI_ACCESS_TOKEN) return;
+async function sendCapiPurchase({ transactionId, amount, email, name, fbp, fbc, ip, ua, eventSourceUrl }) {
+  if (!CAPI_ACCESS_TOKEN) {
+    console.warn(`[capi] IGNORADO: CAPI_ACCESS_TOKEN vazio no Vercel (tx=${transactionId})`);
+    return false;
+  }
+
+  // Dedup atômico via Redis: se já enviamos este transactionId, não manda de novo
+  const dedupKey = `capi:sent:${transactionId}`;
+  const already = await redisCmd('SET', dedupKey, '1', 'EX', '86400', 'NX');
+  // Upstash SET NX retorna "OK" se setou, null se já existia
+  if (already !== 'OK' && already !== null) {
+    // null = já existia; qualquer outra coisa = falha de redis, segue adiante
+  }
+  if (already === null) {
+    console.log(`[capi] dedup: Purchase ja enviado para ${transactionId}, ignorando`);
+    return false;
+  }
+
   const userData = {};
   if (email) userData.em = [crypto.createHash('sha256').update(email.trim().toLowerCase()).digest('hex')];
   if (name) {
@@ -79,28 +95,56 @@ async function sendCapiPurchase({ transactionId, amount, email, name }) {
     userData.fn = [crypto.createHash('sha256').update(parts[0]).digest('hex')];
     if (parts.length > 1) userData.ln = [crypto.createHash('sha256').update(parts[parts.length - 1]).digest('hex')];
   }
-  const payload = {
-    data: [{
-      event_name: 'Purchase',
-      event_time: Math.floor(Date.now() / 1000),
-      action_source: 'website',
-      event_id: transactionId,
-      user_data: userData,
-      custom_data: { value: amount, currency: 'BRL' },
-    }],
+  if (fbp) userData.fbp = fbp;
+  if (fbc) userData.fbc = fbc;
+  if (ip) userData.client_ip_address = ip;
+  if (ua) userData.client_user_agent = ua;
+
+  const event = {
+    event_name: 'Purchase',
+    event_time: Math.floor(Date.now() / 1000),
+    action_source: 'website',
+    event_id: transactionId,
+    user_data: userData,
+    custom_data: {
+      value: Number(amount),
+      currency: 'BRL',
+      content_type: 'product',
+      content_ids: ['taxa-gateway'],
+    },
   };
-  try {
-    const r = await fetch(`https://graph.facebook.com/v18.0/${CAPI_PIXEL_ID}/events?access_token=${CAPI_ACCESS_TOKEN}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const json = await r.json().catch(() => ({}));
-    console.log(`[capi] Purchase enviado: ${transactionId}`, json.events_received ?? json);
-  } catch (err) {
-    console.error('[capi] erro ao enviar Purchase:', err);
+  if (eventSourceUrl) event.event_source_url = eventSourceUrl;
+
+  const payload = { data: [event] };
+
+  // Retry até 3 vezes em caso de falha
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const r = await fetch(`https://graph.facebook.com/v18.0/${CAPI_PIXEL_ID}/events?access_token=${CAPI_ACCESS_TOKEN}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const json = await r.json().catch(() => ({}));
+      if (r.ok && json.events_received) {
+        console.log(`[capi] OK Purchase ${transactionId} tentativa=${attempt} received=${json.events_received}`);
+        return true;
+      }
+      console.error(`[capi] FALHA Purchase ${transactionId} tentativa=${attempt} status=${r.status}`, json);
+    } catch (err) {
+      console.error(`[capi] exceção Purchase ${transactionId} tentativa=${attempt}:`, err.message);
+    }
+    if (attempt < 3) await new Promise(r => setTimeout(r, 1000 * attempt));
   }
-} // transactionId -> { status, amount, fee, netAmount, email, name, createdAt, paidAt }
+  // Se chegou aqui, falhou tudo — remove dedup pra deixar outra tentativa possível
+  await redisCmd('DEL', dedupKey);
+  return false;
+}
+
+function getClientIp(req) {
+  const xff = req.get('x-forwarded-for') || '';
+  return xff.split(',')[0].trim() || req.socket?.remoteAddress || '';
+}
 
 const app = express();
 
@@ -141,12 +185,20 @@ app.post('/webhooks/safipay', express.raw({ type: '*/*' }), (req, res) => {
   const order = orders.get(data.transactionId);
 
   if (event === 'pix.paid') {
-    // Manda CAPI independente de ter o pedido na memória desta instância Vercel.
-    sendCapiPurchase({
-      transactionId: data.transactionId,
-      amount: order?.amount ?? data.amount ?? Number(PRODUCT_PRICE),
-      email: order?.email,
-      name: order?.name,
+    // Busca dados de tracking persistidos no Redis (fbp/fbc/ip/ua/email/name)
+    redisCmd('HGETALL', `order:${data.transactionId}`).then(arr => {
+      const meta = hgetallToObj(arr) || {};
+      sendCapiPurchase({
+        transactionId: data.transactionId,
+        amount: meta.amount ? Number(meta.amount) : (order?.amount ?? data.amount ?? Number(PRODUCT_PRICE)),
+        email: meta.email || order?.email,
+        name: meta.name || order?.name,
+        fbp: meta.fbp,
+        fbc: meta.fbc,
+        ip: meta.ip,
+        ua: meta.ua,
+        eventSourceUrl: meta.url,
+      });
     });
     if (order) {
       order.status = 'paid';
@@ -174,6 +226,11 @@ app.use(express.json());
 app.post('/api/create-pix', async (req, res) => {
   const name = String(req.body?.name || '').trim().slice(0, 120);
   const email = String(req.body?.email || '').trim().slice(0, 120);
+  const fbp = String(req.body?.fbp || '').slice(0, 200);
+  const fbc = String(req.body?.fbc || '').slice(0, 300);
+  const pageUrl = String(req.body?.url || '').slice(0, 500);
+  const ip = getClientIp(req);
+  const ua = String(req.get('user-agent') || '').slice(0, 500);
 
   if (!email) {
     return res.status(400).json({ error: 'Digite sua chave PIX.' });
@@ -214,9 +271,27 @@ app.post('/api/create-pix', async (req, res) => {
       email,
       name,
       ref,
+      fbp, fbc, ip, ua, url: pageUrl,
       createdAt: new Date().toISOString(),
       paidAt: null,
     });
+
+    // Persiste no Redis para o webhook (outra instância Vercel) conseguir recuperar
+    const orderHash = [
+      'amount', String(d.amount),
+      'email', email,
+      'name', name,
+      'ref', ref,
+      'fbp', fbp,
+      'fbc', fbc,
+      'ip', ip,
+      'ua', ua,
+      'url', pageUrl,
+    ];
+    redisPipeline([
+      ['HSET', `order:${d.transactionId}`, ...orderHash],
+      ['EXPIRE', `order:${d.transactionId}`, '86400'],
+    ]).catch(() => {});
 
     // Nunca devolvemos credenciais ao front. Só o necessário para mostrar o Pix.
     res.json({
@@ -256,10 +331,20 @@ app.get('/api/status', async (req, res) => {
       const paidAt = json.data.paidAt || new Date().toISOString();
       if (status === 'paid') {
         console.log(`[status] Pedido PAGO (via consulta): ${id}`);
-        if (!order?._capiSent) {
-          if (order) order._capiSent = true;
-          sendCapiPurchase({ transactionId: id, amount: order?.amount ?? json.data.amount, email: order?.email, name: order?.name });
-        }
+        // Busca dados persistidos no Redis - dedup é feito atomicamente dentro de sendCapiPurchase
+        const arr = await redisCmd('HGETALL', `order:${id}`);
+        const meta = hgetallToObj(arr) || {};
+        sendCapiPurchase({
+          transactionId: id,
+          amount: meta.amount ? Number(meta.amount) : (order?.amount ?? json.data.amount),
+          email: meta.email || order?.email,
+          name: meta.name || order?.name,
+          fbp: meta.fbp || order?.fbp,
+          fbc: meta.fbc || order?.fbc,
+          ip: meta.ip || order?.ip,
+          ua: meta.ua || order?.ua,
+          eventSourceUrl: meta.url || order?.url,
+        });
       }
       return res.json({ status, paidAt: status === 'paid' ? paidAt : null });
     }

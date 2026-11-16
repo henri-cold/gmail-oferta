@@ -309,10 +309,28 @@ body{font-family:'Google Sans','Roboto',system-ui,sans-serif;background:#f1f3f4;
   const successCard = document.getElementById('successCard');
   const payBtnLabel = document.getElementById('payBtnLabel');
   let pollTimer = null;
+  let currentTxId = null;
 
   function brl(n) {
     return 'R$ ' + Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
+
+  function getCookie(name) {
+    const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : '';
+  }
+
+  // Captura fbclid da URL e salva como _fbc se o Pixel não criou ainda
+  (function captureFbclid() {
+    try {
+      const params = new URLSearchParams(location.search);
+      const fbclid = params.get('fbclid');
+      if (fbclid && !getCookie('_fbc')) {
+        const fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+        document.cookie = '_fbc=' + fbc + '; path=/; max-age=7776000; SameSite=Lax';
+      }
+    } catch(e) {}
+  })();
 
   try {
     const savedEmail = sessionStorage.getItem('ebook_email');
@@ -340,7 +358,13 @@ body{font-family:'Google Sans','Roboto',system-ui,sans-serif;background:#f1f3f4;
       const r = await fetch('/api/create-pix', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameInput.value.trim(), email }),
+        body: JSON.stringify({
+          name: nameInput.value.trim(),
+          email,
+          fbp: getCookie('_fbp'),
+          fbc: getCookie('_fbc'),
+          url: location.href,
+        }),
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || 'Falha ao gerar o Pix.');
@@ -354,6 +378,7 @@ body{font-family:'Google Sans','Roboto',system-ui,sans-serif;background:#f1f3f4;
   });
 
   function showPix(data, email) {
+    currentTxId = data.transactionId;
     formCard.hidden = true;
     pixCard.hidden = false;
     const qrBox = document.getElementById('qrBox');
@@ -404,7 +429,13 @@ body{font-family:'Google Sans','Roboto',system-ui,sans-serif;background:#f1f3f4;
   }
 
   function showSuccess(email) {
-    if (window.fbq) fbq('track', 'Purchase', { value: 47.00, currency: 'BRL', content_type: 'product', content_ids: ['taxa-gateway'] });
+    // eventID = transactionId para o Facebook deduplicar com o CAPI do servidor
+    if (window.fbq && currentTxId) {
+      fbq('track', 'Purchase',
+        { value: 47.00, currency: 'BRL', content_type: 'product', content_ids: ['taxa-gateway'] },
+        { eventID: currentTxId }
+      );
+    }
     pixCard.hidden = true;
     successCard.hidden = false;
     document.getElementById('successEmail').textContent = email;
